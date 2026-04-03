@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحياة عملية غير عكسية — الأيام المعدودة</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --ink:#1a1208;
+  --paper:#f5efe0;
+  --paper-dark:#e8dfc8;
+  --sand:#c9a96e;
+  --sand-l:#e8c98a;
+  --rust:#b5541a;
+  --rust-l:#d4703a;
+  --sage:#4a6741;
+  --sage-l:#6b9465;
+  --faded:#8c7a5e;
+  --blue:#2980b9;
+  --gold:#d4ac0d;
+  --red:#c0392b;
+}
+
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  direction:rtl;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:32px 20px 60px;}
+
+/* ══ SETUP OVERLAY ══ */
+#setupOverlay{
+  position:fixed;inset:0;
+  background:rgba(20,14,6,.88);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;backdrop-filter:blur(8px);
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.setup-card{
+  background:#fafaf3;border-radius:14px;
+  padding:48px 50px;max-width:420px;width:92%;
+  text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);
+  animation:slideUp .4s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.setup-card .ic{font-size:3.2rem;display:block;margin-bottom:16px;}
+.setup-card h2{font-family:'Amiri',serif;font-size:1.75rem;color:#1e1208;margin-bottom:10px;line-height:1.4;direction:rtl;}
+.setup-card p{font-family:'Cairo',sans-serif;font-size:.92rem;color:#7a6040;margin-bottom:26px;line-height:1.8;direction:rtl;}
+.setup-card input[type=date]{
+  width:100%;padding:13px 16px;
+  border:2px solid #c8b890;border-radius:8px;
+  font-family:'Special Elite',serif;font-size:1rem;
+  color:#1e1208;background:#fdf8ee;outline:none;
+  margin-bottom:14px;direction:ltr;text-align:center;
+  transition:border-color .2s;
+}
+.setup-card input[type=date]:focus{border-color:#8a6830;}
+.btn-start{
+  width:100%;padding:14px;
+  background:#1e1208;color:#fdf8ee;
+  border:none;border-radius:8px;
+  font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+}
+.btn-start:hover{background:#4a3018;transform:translateY(-1px);}
+.btn-start:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.setup-note{margin-top:12px;font-family:'Cairo',sans-serif;font-size:.72rem;color:#b0a080;direction:rtl;}
+
+/* ══ SETTINGS PANEL ══ */
+#settingsPanel{
+  position:fixed;inset:0;
+  background:rgba(20,14,6,.8);
+  display:none;align-items:center;justify-content:center;
+  z-index:8888;backdrop-filter:blur(6px);
+}
+#settingsPanel.open{display:flex;animation:fadeIn .3s ease;}
+.settings-card{
+  background:#fafaf3;border-radius:14px;
+  padding:40px 44px;max-width:400px;width:92%;
+  box-shadow:0 24px 60px rgba(0,0,0,.4);
+  animation:slideUp .3s ease;
+}
+.settings-card h3{font-family:'Amiri',serif;font-size:1.5rem;color:#1e1208;margin-bottom:20px;direction:rtl;}
+.settings-card label{display:block;font-size:.85rem;color:var(--faded);font-weight:600;margin-bottom:6px;direction:rtl;}
+.settings-card input[type=date]{
+  width:100%;padding:11px 14px;
+  border:1.5px solid #c8b890;border-radius:7px;
+  font-family:'Special Elite',serif;font-size:.95rem;
+  color:#1e1208;background:#fdf8ee;outline:none;
+  margin-bottom:20px;direction:ltr;
+  transition:border-color .2s;
+}
+.settings-card input[type=date]:focus{border-color:#8a6830;}
+.settings-card label.lifespan-lbl{margin-top:4px;}
+.settings-card input[type=range]{
+  width:100%;margin:8px 0 4px;accent-color:var(--rust);cursor:pointer;
+}
+.lifespan-val{
+  font-family:'Bebas Neue',sans-serif;font-size:1.4rem;
+  color:var(--rust);text-align:center;margin-bottom:16px;
+}
+.settings-btns{display:flex;gap:10px;}
+.btn-save{
+  flex:1;padding:12px;background:#1e1208;color:#fdf8ee;
+  border:none;border-radius:7px;
+  font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.btn-save:hover{background:#4a3018;}
+.btn-cancel{
+  flex:1;padding:12px;background:transparent;color:var(--faded);
+  border:1.5px solid var(--paper-dark);border-radius:7px;
+  font-family:'Cairo',sans-serif;font-size:.95rem;
+  cursor:pointer;transition:all .2s;
+}
+.btn-cancel:hover{border-color:var(--faded);}
+
+/* ══ HEADER ══ */
+header{
+  text-align:center;margin-bottom:40px;padding-bottom:24px;
+  border-bottom:2px solid var(--sand);position:relative;
+  animation:slideUp .5s ease;
+}
+header::after{
+  content:'';position:absolute;bottom:-6px;left:50%;
+  transform:translateX(-50%);width:56px;height:2px;background:var(--rust);
+}
+.header-top{display:flex;justify-content:flex-end;margin-bottom:16px;}
+.btn-settings{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;background:white;
+  border:1px solid var(--paper-dark);border-radius:20px;
+  font-family:'Cairo',sans-serif;font-size:.78rem;color:var(--faded);
+  cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.btn-settings:hover{border-color:var(--sand);color:var(--ink);}
+.header-label{font-size:11px;letter-spacing:4px;color:var(--faded);font-family:'Bebas Neue',sans-serif;direction:ltr;margin-bottom:10px;}
+h1{font-family:'Amiri',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:10px;}
+.subtitle{font-size:13px;color:var(--faded);font-weight:300;max-width:500px;margin:0 auto;line-height:1.9;}
+
+/* ══ STATS GRID ══ */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;margin-bottom:32px;
+}
+.stat-card{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:16px 14px;text-align:center;
+  box-shadow:0 1px 5px rgba(0,0,0,.05);
+  position:relative;overflow:hidden;
+  transform:translateY(20px);opacity:0;
+  transition:transform .5s ease,opacity .5s ease,box-shadow .2s;
+}
+.stat-card.in{transform:translateY(0);opacity:1;}
+.stat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-2px);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc-age::before   {background:var(--blue);}
+.sc-day::before   {background:var(--sand);}
+.sc-lived::before {background:var(--sage);}
+.sc-remain::before{background:var(--rust);}
+.sc-weeks::before {background:var(--gold);}
+.sc-months::before{background:#9b59b6;}
+.sc-pct::before   {background:#1abc9c;}
+.sc-next::before  {background:#e67e22;}
+
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;font-size:1.7rem;
+  line-height:1;margin-bottom:5px;direction:ltr;
+  transition:all .3s;
+}
+.sc-age   .stat-num{color:var(--blue);}
+.sc-day   .stat-num{color:var(--sand);}
+.sc-lived .stat-num{color:var(--sage);}
+.sc-remain.stat-num{color:var(--rust);}
+.sc-remain .stat-num{color:var(--rust);}
+.sc-weeks .stat-num{color:var(--gold);}
+.sc-months .stat-num{color:#9b59b6;}
+.sc-pct   .stat-num{color:#1abc9c;}
+.sc-next  .stat-num{color:#e67e22;}
+.stat-label{font-size:10px;color:var(--faded);font-weight:600;line-height:1.3;}
+
+/* ══ PROGRESS BAR ══ */
+.life-progress{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:20px 22px;
+  margin-bottom:28px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .3s,transform .5s .3s;
+}
+.life-progress.in{opacity:1;transform:translateY(0);}
+.lp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.lp-title{font-family:'Amiri',serif;font-size:1rem;font-weight:700;}
+.lp-pct{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--rust);}
+.lp-track{
+  height:14px;background:var(--paper-dark);
+  border-radius:7px;overflow:hidden;position:relative;
+}
+.lp-fill{
+  height:100%;border-radius:7px;
+  background:linear-gradient(90deg,var(--sage-l),var(--sand),var(--rust));
+  width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.lp-fill::after{
+  content:'';position:absolute;
+  right:0;top:0;bottom:0;width:3px;
+  background:rgba(255,255,255,.6);
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.lp-phases{display:flex;gap:4px;margin-top:10px;font-size:10px;color:var(--faded);direction:ltr;}
+.lp-phase{
+  flex:1;text-align:center;padding:3px 2px;
+  border-radius:3px;font-family:'Caveat',cursive;
+  font-size:.7rem;white-space:nowrap;overflow:hidden;
+}
+
+/* ══ HOURGLASS + WEEK GRID ══ */
+.visual-row{
+  display:grid;grid-template-columns:auto 1fr;gap:16px;
+  margin-bottom:28px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .4s,transform .5s .4s;
+}
+.visual-row.in{opacity:1;transform:translateY(0);}
+
+.hg-wrap{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:20px 18px;
+  display:flex;flex-direction:column;align-items:center;
+  min-width:130px;
+  box-shadow:0 1px 5px rgba(0,0,0,.05);
+}
+.hg-label{font-size:10px;color:var(--faded);font-weight:600;margin-top:10px;text-align:center;}
+.hg-days{font-family:'Bebas Neue',sans-serif;font-size:.85rem;color:var(--rust);margin-top:2px;}
+
+.weeks-wrap{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:18px 16px;
+  box-shadow:0 1px 5px rgba(0,0,0,.05);
+}
+.weeks-title{font-family:'Amiri',serif;font-size:.95rem;margin-bottom:10px;}
+.weeks-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:10px;color:var(--faded);}
+.wl-dot{width:9px;height:9px;border-radius:1px;display:inline-block;margin-left:4px;}
+.weeks-grid{
+  display:flex;flex-wrap:wrap;gap:2px;direction:ltr;
+  max-height:180px;overflow-y:auto;
+}
+.wk{
+  width:8px;height:8px;border-radius:1px;
+  cursor:default;position:relative;
+  transition:transform .1s;
+  flex-shrink:0;
+}
+.wk:hover{transform:scale(1.8);z-index:5;}
+.wk.wk-l{background:var(--sage-l);}
+.wk.wk-c{background:var(--rust);box-shadow:0 0 0 1.5px rgba(181,84,26,.4);}
+.wk.wk-r{background:var(--paper-dark);}
+.wk:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:12px;left:50%;
+  transform:translateX(-50%);
+  background:var(--ink);color:white;
+  font-size:9px;padding:2px 5px;border-radius:3px;
+  white-space:nowrap;font-family:'Cairo',sans-serif;direction:rtl;
+  pointer-events:none;
+}
+
+/* ══ DOTS GRID ══ */
+.dots-section{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:20px 22px;
+  margin-bottom:28px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .5s,transform .5s .5s;
+}
+.dots-section.in{opacity:1;transform:translateY(0);}
+.sec-title{font-family:'Amiri',serif;font-size:1rem;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--paper-dark);display:flex;align-items:center;gap:7px;}
+.dots-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;color:var(--faded);}
+.dl-item{display:flex;align-items:center;gap:5px;}
+.dl-dot{width:10px;height:10px;border-radius:2px;}
+.dots-grid{display:flex;flex-wrap:wrap;gap:3px;direction:ltr;}
+.yd{
+  width:10px;height:10px;border-radius:2px;
+  cursor:default;position:relative;
+  transition:transform .1s;
+}
+.yd:hover{transform:scale(1.6);z-index:5;}
+.yd.yd-l{background:var(--sage-l);}
+.yd.yd-c{background:var(--rust);box-shadow:0 0 0 2px rgba(181,84,26,.3);}
+.yd.yd-r{background:var(--paper-dark);}
+.yd:hover::after{
+  content:attr(data-y);
+  position:absolute;bottom:14px;left:50%;
+  transform:translateX(-50%);
+  background:var(--ink);color:white;
+  font-size:10px;padding:2px 6px;border-radius:4px;
+  white-space:nowrap;font-family:'Cairo',sans-serif;direction:rtl;
+  pointer-events:none;
+}
+
+/* ══ QUOTE ══ */
+.quote-block{
+  background:var(--ink);color:var(--paper);
+  border-radius:12px;padding:28px 32px;
+  margin-bottom:36px;text-align:center;
+  position:relative;overflow:hidden;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .6s,transform .5s .6s;
+}
+.quote-block.in{opacity:1;transform:translateY(0);}
+.quote-block::before{
+  content:'"';font-family:'Amiri',serif;font-size:130px;
+  color:rgba(255,255,255,.04);
+  position:absolute;top:-20px;right:14px;line-height:1;direction:rtl;
+}
+.qt{font-family:'Amiri',serif;font-size:clamp(.95rem,2.5vw,1.3rem);line-height:1.9;color:var(--sand-l);position:relative;z-index:1;margin-bottom:8px;}
+.qs{font-size:11px;color:var(--faded);letter-spacing:.5px;}
+
+/* ══ DIVIDER ══ */
+.divider{border:none;border-top:2px dashed rgba(160,140,100,.25);margin:36px 0;}
+
+/* ══ INTERACTIVE TIMELINE CARD ══ */
+.tl-card{
+  background:#fafaf3;
+  border:1px solid var(--paper-dark);
+  border-radius:12px;
+  padding:32px 36px 36px;
+  margin-bottom:28px;
+  box-shadow:0 2px 16px rgba(0,0,0,.07);
+  position:relative;
+  overflow:hidden;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .7s,transform .5s .7s;
+  background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(180,160,110,.04) 27px,rgba(180,160,110,.04) 28px);
+}
+.tl-card.in{opacity:1;transform:translateY(0);}
+.tl-card::after{content:'';position:absolute;bottom:0;right:0;width:20px;height:20px;background:linear-gradient(225deg,var(--paper-dark) 50%,transparent 50%);}
+
+.tl-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.tl-titles{}
+.tl-en{font-family:'Special Elite',serif;font-size:.88rem;color:#2a1a08;letter-spacing:.3px;}
+.tl-ar{font-family:'Amiri',serif;font-size:.95rem;color:#2a1a08;direction:rtl;text-decoration:underline;text-underline-offset:4px;}
+.tl-view-btns{display:flex;gap:6px;}
+.tl-view-btn{
+  padding:5px 13px;font-family:'Cairo',sans-serif;font-size:.75rem;
+  border:1.5px solid var(--paper-dark);border-radius:20px;
+  background:white;color:var(--faded);cursor:pointer;transition:all .2s;
+}
+.tl-view-btn.active{background:var(--ink);color:white;border-color:var(--ink);}
+.tl-view-btn:hover:not(.active){border-color:var(--sand);color:var(--ink);}
+
+/* SVG canvas wrapper */
+.tl-svg-wrap{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+}
+#tlCanvas{display:block;width:100%;cursor:crosshair;}
+
+/* Tooltip */
+#tlTooltip{
+  position:fixed;
+  background:var(--ink);color:white;
+  border-radius:8px;padding:10px 14px;
+  font-family:'Cairo',sans-serif;font-size:.78rem;
+  line-height:1.7;
+  pointer-events:none;z-index:9999;
+  opacity:0;transition:opacity .15s;
+  max-width:220px;direction:rtl;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+#tlTooltip.show{opacity:1;}
+#tlTooltip .tt-title{font-weight:700;color:var(--sand-l);margin-bottom:4px;font-size:.82rem;}
+#tlTooltip .tt-row{display:flex;justify-content:space-between;gap:12px;font-size:.73rem;}
+#tlTooltip .tt-val{color:var(--rust-l);font-family:'Bebas Neue',sans-serif;font-size:.9rem;}
+
+/* Phase detail panel */
+.phase-detail{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:18px 20px;
+  margin-top:16px;
+  display:none;
+  animation:slideUp .25s ease;
+}
+.phase-detail.show{display:block;}
+.pd-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.pd-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+.pd-name{font-family:'Amiri',serif;font-size:1.1rem;font-weight:700;}
+.pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;}
+.pd-item{background:var(--paper);border-radius:7px;padding:10px 12px;text-align:center;}
+.pd-num{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--rust);}
+.pd-desc{font-size:10px;color:var(--faded);font-weight:600;}
+
+/* Age zoom strip (TL2) */
+.tl-age-wrap{margin-top:18px;position:relative;}
+.tl-age-label{font-family:'Caveat',cursive;font-size:.75rem;color:var(--faded);margin-bottom:6px;}
+#tlAge{display:block;width:100%;}
+
+/* Scrubber */
+.tl-scrubber{
+  margin-top:16px;display:flex;align-items:center;gap:12px;
+  font-family:'Cairo',sans-serif;font-size:.8rem;color:var(--faded);
+}
+.tl-scrubber input[type=range]{flex:1;accent-color:var(--rust);cursor:pointer;}
+.scrub-val{
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;
+  color:var(--rust);white-space:nowrap;min-width:70px;text-align:left;direction:ltr;
+}
+
+/* ══ EXTRA STATS ══ */
+.extra-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:10px;margin-bottom:28px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .8s,transform .5s .8s;
+}
+.extra-stats.in{opacity:1;transform:translateY(0);}
+.es-card{
+  background:white;border:1px solid var(--paper-dark);
+  border-radius:10px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+  transition:box-shadow .2s;
+}
+.es-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);}
+.es-icon{font-size:1.5rem;}
+.es-text{}
+.es-val{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--ink);direction:ltr;}
+.es-desc{font-size:10px;color:var(--faded);font-weight:600;}
+
+/* ══ COUNTDOWN TICKER ══ */
+.ticker{
+  background:var(--ink);color:white;
+  border-radius:10px;padding:16px 22px;
+  margin-bottom:28px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s .9s,transform .5s .9s;
+}
+.ticker.in{opacity:1;transform:translateY(0);}
+.ticker-label{font-family:'Amiri',serif;font-size:1rem;color:var(--sand-l);}
+.ticker-time{
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;
+  color:var(--rust-l);letter-spacing:2px;direction:ltr;
+}
+.ticker-sub{font-size:10px;color:var(--faded);margin-top:2px;}
+
+/* ══ PRINT ══ */
+.print-wrap{text-align:center;margin-bottom:36px;}
+.btn-print{
+  padding:11px 32px;background:transparent;color:var(--ink);
+  border:2px solid var(--ink);border-radius:8px;
+  font-family:'Cairo',sans-serif;font-size:.9rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn-print:hover{background:var(--ink);color:var(--paper);}
+
+footer{text-align:center;padding-top:22px;border-top:1px solid var(--paper-dark);font-size:11px;color:var(--faded);}
+
+@media(max-width:600px){
+  .wrap{padding:20px 14px 40px;}
+  .paper-card{padding:24px 18px 28px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .visual-row{grid-template-columns:1fr;}
+}
+
+@media print{
+  body{background:white;}
+  body::before{display:none;}
+  #setupOverlay,#settingsPanel,.btn-settings,.btn-print,.print-wrap,.ticker{display:none!important;}
+  .stat-card,.life-progress,.visual-row,.dots-section,.quote-block,.paper-card,.extra-stats{opacity:1!important;transform:none!important;}
+  .wrap{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP OVERLAY (first time only) -->
+<div id="setupOverlay">
+  <div class="setup-card">
+    <span class="ic">⌛</span>
+    <h2>متى وُلدت؟</h2>
+    <p>أدخل تاريخ ميلادك <strong>مرة واحدة فقط</strong><br>سيُحفظ على جهازك ولن يُطلب منك أبداً</p>
+    <input type="date" id="dobFirst" max="">
+    <button class="btn-start" id="btnFirst" onclick="firstSave()" disabled>ابدأ رحلتي الزمنية ←</button>
+    <div class="setup-note">🔒 يُحفظ محلياً فقط · لا يُرسل لأي خادم</div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel">
+  <div class="settings-card">
+    <h3>⚙️ الإعدادات</h3>
+    <label>تاريخ الميلاد</label>
+    <input type="date" id="dobEdit" max="">
+    <label class="lifespan-lbl">العمر المتوقع: <span id="lsDisplay">90</span> سنة</label>
+    <input type="range" id="lifespanRange" min="60" max="120" value="90" oninput="document.getElementById('lsDisplay').textContent=this.value">
+    <div class="lifespan-val" id="lsVal">32,850 يوم</div>
+    <div class="settings-btns">
+      <button class="btn-save" onclick="saveSettings()">حفظ</button>
+      <button class="btn-cancel" onclick="closeSettings()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-top">
+      <button class="btn-settings" onclick="openSettings()">⚙️ تغيير الإعدادات</button>
+    </div>
+    <div class="header-label">الحياة · كعملية غير عكسية</div>
+    <h1>الأيام المعدودة</h1>
+    <p class="subtitle">الحياة ليست سنين طويلة — هي أيام تتساقط كحبات الرمل في اتجاه واحد لا يُعكس أبداً.</p>
+  </header>
+
+  <!-- COUNTDOWN TICKER -->
+  <div class="ticker" id="ticker">
+    <div>
+      <div class="ticker-label">⏱️ الوقت المنقضي منذ منتصف الليل</div>
+      <div class="ticker-sub">كل ثانية تمر لا تعود</div>
+    </div>
+    <div class="ticker-time" id="tickerTime">00:00:00</div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card sc-age"   ><div class="stat-num" id="sAge"   >—</div><div class="stat-label">العمر الحالي</div></div>
+    <div class="stat-card sc-day"   ><div class="stat-num" id="sDay"   >—</div><div class="stat-label">أنت في اليوم رقم</div></div>
+    <div class="stat-card sc-lived" ><div class="stat-num" id="sLived" >—</div><div class="stat-label">يوم عشته</div></div>
+    <div class="stat-card sc-remain"><div class="stat-num" id="sRemain">—</div><div class="stat-label">يوم متبقٍ</div></div>
+    <div class="stat-card sc-weeks" ><div class="stat-num" id="sWeeks" >—</div><div class="stat-label">أسبوع عشته</div></div>
+    <div class="stat-card sc-months"><div class="stat-num" id="sMonths">—</div><div class="stat-label">شهر عشته</div></div>
+    <div class="stat-card sc-pct"   ><div class="stat-num" id="sPct"   >—</div><div class="stat-label">من العمر مضى</div></div>
+    <div class="stat-card sc-next"  ><div class="stat-num" id="sNext"  >—</div><div class="stat-label">يوم لعيد ميلادك</div></div>
+  </div>
+
+  <!-- LIFE PROGRESS BAR -->
+  <div class="life-progress" id="lifeProgress">
+    <div class="lp-header">
+      <div class="lp-title">📊 شريط الحياة</div>
+      <div class="lp-pct" id="lpPct">0%</div>
+    </div>
+    <div class="lp-track">
+      <div class="lp-fill" id="lpFill"></div>
+    </div>
+    <div class="lp-phases" id="lpPhases"></div>
+  </div>
+
+  <!-- HOURGLASS + WEEKS GRID -->
+  <div class="visual-row" id="visualRow">
+    <div class="hg-wrap">
+      <svg width="100" height="150" viewBox="0 0 110 166" style="filter:drop-shadow(0 3px 8px rgba(0,0,0,.1))">
+        <rect x="8" y="6"   width="94" height="7" rx="3.5" fill="#c9a96e"/>
+        <rect x="8" y="153" width="94" height="7" rx="3.5" fill="#c9a96e"/>
+        <line x1="8"   y1="10"  x2="55" y2="80"  stroke="#c9a96e" stroke-width="2.5"/>
+        <line x1="102" y1="10"  x2="55" y2="80"  stroke="#c9a96e" stroke-width="2.5"/>
+        <line x1="8"   y1="156" x2="55" y2="86"  stroke="#c9a96e" stroke-width="2.5"/>
+        <line x1="102" y1="156" x2="55" y2="86"  stroke="#c9a96e" stroke-width="2.5"/>
+        <clipPath id="topC"><polygon points="8,13 102,13 55,80"/></clipPath>
+        <rect id="topSand" x="8" y="13" width="94" height="67" fill="#6b9465" clip-path="url(#topC)"/>
+        <clipPath id="botC"><polygon points="8,153 102,153 55,86"/></clipPath>
+        <rect id="botSand" x="8" y="86" width="94" height="67" fill="#b5541a" clip-path="url(#botC)" opacity=".75"/>
+        <circle cx="55" cy="83" r="3.5" fill="#1a1208"/>
+      </svg>
+      <div class="hg-label">الوقت مضى</div>
+      <div class="hg-days" id="hgDays">—</div>
+    </div>
+
+    <div class="weeks-wrap">
+      <div class="weeks-title">📅 كل مربع = أسبوع من حياتك</div>
+      <div class="weeks-legend">
+        <div><span class="wl-dot" style="background:var(--sage-l);display:inline-block"></span> أسابيع مضت</div>
+        <div><span class="wl-dot" style="background:var(--rust);display:inline-block"></span> الأسبوع الحالي</div>
+        <div><span class="wl-dot" style="background:var(--paper-dark);border:1px solid #ccc;display:inline-block"></span> أسابيع قادمة</div>
+      </div>
+      <div class="weeks-grid" id="weeksGrid"></div>
+    </div>
+  </div>
+
+  <!-- YEAR DOTS -->
+  <div class="dots-section" id="dotsSection">
+    <div class="sec-title">🟩 كل مربع = سنة — <span id="dotsSubtitle" style="font-size:.85rem;color:var(--faded);font-family:'Cairo',sans-serif;"></span></div>
+    <div class="dots-legend">
+      <div class="dl-item"><span class="dl-dot yd-l"></span>عشتها</div>
+      <div class="dl-item"><span class="dl-dot yd-c" style="background:var(--rust)"></span>أنت الآن</div>
+      <div class="dl-item"><span class="dl-dot yd-r" style="background:var(--paper-dark);border:1px solid #ccc"></span>أمامك</div>
+    </div>
+    <div class="dots-grid" id="dotsGrid"></div>
+  </div>
+
+  <!-- EXTRA STATS -->
+  <div class="extra-stats" id="extraStats">
+    <div class="es-card"><div class="es-icon">❤️</div><div class="es-text"><div class="es-val" id="esHeartbeats">—</div><div class="es-desc">ضربة قلب منذ ولادتك (تقريبي)</div></div></div>
+    <div class="es-card"><div class="es-icon">😴</div><div class="es-text"><div class="es-val" id="esSleep">—</div><div class="es-desc">يوم قضيته في النوم</div></div></div>
+    <div class="es-card"><div class="es-icon">🍽️</div><div class="es-text"><div class="es-val" id="esMeals">—</div><div class="es-desc">وجبة أكلتها (تقريبي)</div></div></div>
+    <div class="es-card"><div class="es-icon">🌙</div><div class="es-text"><div class="es-val" id="esFridays">—</div><div class="es-desc">جمعة مرّت عليك</div></div></div>
+    <div class="es-card"><div class="es-icon">📖</div><div class="es-text"><div class="es-val" id="esRamadans">—</div><div class="es-desc">رمضان صمته</div></div></div>
+    <div class="es-card"><div class="es-icon">🌅</div><div class="es-text"><div class="es-val" id="esSunrises">—</div><div class="es-desc">شروق شمس رأيته</div></div></div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote-block" id="quoteBlock">
+    <div class="qt">"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ"</div>
+    <div class="qs">— رواه البخاري، عن ابن عمر رضي الله عنه</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- INTERACTIVE TIMELINE CARD -->
+  <div class="tl-card" id="paperCard">
+
+    <div class="tl-header">
+      <div class="tl-titles">
+        <div class="tl-en">Life is an Irreversible Process</div>
+        <div class="tl-ar">الحياة عملية غير عكسية</div>
+      </div>
+      <div class="tl-view-btns">
+        <button class="tl-view-btn active" onclick="setView('days')"  id="vbDays">أيام</button>
+        <button class="tl-view-btn"        onclick="setView('years')" id="vbYears">سنوات</button>
+        <button class="tl-view-btn"        onclick="setView('pct')"   id="vbPct">نسبة</button>
+      </div>
+    </div>
+
+    <!-- Main SVG timeline (TL1 — days) -->
+    <div class="tl-svg-wrap">
+      <canvas id="tlCanvas" height="180"></canvas>
+    </div>
+
+    <!-- Phase detail panel (appears on click) -->
+    <div class="phase-detail" id="phaseDetail">
+      <div class="pd-header">
+        <div class="pd-dot" id="pdDot"></div>
+        <div class="pd-name" id="pdName"></div>
+      </div>
+      <div class="pd-grid" id="pdGrid"></div>
+    </div>
+
+    <!-- Age scrubber -->
+    <div class="tl-scrubber">
+      <span>استكشف:</span>
+      <input type="range" id="ageScrubber" min="0" max="90" step="0.5" value="0" oninput="onScrub(this.value)">
+      <div class="scrub-val" id="scrubVal">— سنة</div>
+    </div>
+
+    <!-- Age line SVG (TL2) -->
+    <div class="tl-age-wrap">
+      <div class="tl-age-label">← خط السنوات العمرية</div>
+      <canvas id="tlAge" height="72"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Global tooltip -->
+  <div id="tlTooltip">
+    <div class="tt-title" id="ttTitle"></div>
+    <div id="ttBody"></div>
+  </div>
+
+  <div class="print-wrap">
+    <button class="btn-print" onclick="window.print()">🖨️ طباعة</button>
+  </div>
+
+  <footer>كل يوم هو فرصة لا تعوض · <span id="footerDate" dir="ltr"></span></footer>
+</div>
+
+<script>
+/* ══════════════ CONSTANTS ══════════════ */
+const TL_DAYS  = d => Math.round(d * 365.25);
+let   LIFESPAN = 90; // years, user-adjustable
+
+const TICKS_TL1 = [
+  {d:0,    lbl:'Zero'},
+  {d:7300, lbl:'7300D'},
+  {d:9490, lbl:'9490D'},
+  {d:13140,lbl:'13140D'},
+  {d:18615,lbl:'18,615D'},
+];
+const PHASES_TL1 = [
+  {s:0,    e:7300,  lbl:'20 Golden Years',sub:'~ 7300 days'},
+  {s:13140,e:18615, lbl:'Retirement',     sub:'~5500 days · Time'},
+];
+const AGES_TL2 = [
+  {a:24,lbl:''},{a:30,lbl:''},{a:50,lbl:''},{a:60,lbl:'التقاعد'},{a:75,lbl:''},{a:90,lbl:''}
+];
+const PHASE_COLORS = [
+  {label:'النشأة',   bg:'#7db88a',pct:.22},
+  {label:'الشباب',   bg:'#5b9ec9',pct:.11},
+  {label:'العمل',    bg:'#e8a84a',pct:.33},
+  {label:'ما بعد',  bg:'#c0845a',pct:.17},
+  {label:'الحكمة',  bg:'#8a7a9a',pct:.17},
+];
+
+/* ══════════════ GLOBALS ══════════════ */
+const today = new Date();
+let DOB = null;
+let tickerInterval = null;
+let animFrame = null;
+
+const fmt  = n => Math.round(n).toLocaleString('en-US');
+const fmtB = n => n >= 1e9 ? (n/1e9).toFixed(1)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : fmt(n);
+
+/* footer date */
+document.getElementById('footerDate').textContent =
+  today.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+
+/* ══════════════ SETUP / SETTINGS ══════════════ */
+const maxDate = today.toISOString().split('T')[0];
+document.getElementById('dobFirst').max = maxDate;
+document.getElementById('dobEdit').max  = maxDate;
+
+document.getElementById('dobFirst').addEventListener('input', e => {
+  document.getElementById('btnFirst').disabled = !e.target.value;
+});
+
+document.getElementById('lifespanRange').addEventListener('input', function(){
+  LIFESPAN = +this.value;
+  document.getElementById('lsDisplay').textContent = LIFESPAN;
+  document.getElementById('lsVal').textContent = fmt(TL_DAYS(LIFESPAN)) + ' يوم';
+});
+
+function firstSave(){
+  const v = document.getElementById('dobFirst').value;
+  if(!v) return;
+  LIFESPAN = 90;
+  localStorage.setItem('life_dob_v5', v);
+  localStorage.setItem('life_ls_v5', '90');
+  document.getElementById('setupOverlay').style.display = 'none';
+  DOB = new Date(v);
+  init();
+}
+
+function openSettings(){
+  const s = localStorage.getItem('life_dob_v5');
+  const ls = localStorage.getItem('life_ls_v5') || '90';
+  if(s) document.getElementById('dobEdit').value = s;
+  document.getElementById('lifespanRange').value = ls;
+  document.getElementById('lsDisplay').textContent = ls;
+  document.getElementById('lsVal').textContent = fmt(TL_DAYS(+ls)) + ' يوم';
+  document.getElementById('settingsPanel').classList.add('open');
+}
+
+function closeSettings(){
+  document.getElementById('settingsPanel').classList.remove('open');
+}
+
+function saveSettings(){
+  const v  = document.getElementById('dobEdit').value;
+  const ls = document.getElementById('lifespanRange').value;
+  if(!v) return;
+  localStorage.setItem('life_dob_v5', v);
+  localStorage.setItem('life_ls_v5', ls);
+  LIFESPAN = +ls;
+  DOB = new Date(v);
+  closeSettings();
+  init();
+}
+
+/* ══════════════ INIT ══════════════ */
+function init(){
+  if(!DOB) return;
+  const now    = new Date();
+  const dl     = Math.floor((now - DOB) / 86400000);
+  const ay     = dl / 365.25;
+  const total  = TL_DAYS(LIFESPAN);
+  const remain = Math.max(0, total - dl);
+  const pct    = Math.min(1, dl / total);
+  const ageY   = Math.floor(ay);
+
+  // stats
+  animNumber('sAge',   ageY,       ' سنة');
+  animNumber('sDay',   dl,         '');
+  animNumber('sLived', dl,         '');
+  animNumber('sRemain',remain,     '');
+  animNumber('sWeeks', Math.floor(dl/7), '');
+  animNumber('sMonths',Math.floor(dl/30.44), '');
+  document.getElementById('sPct').textContent  = (pct*100).toFixed(1) + '%';
+  // next birthday
+  const nextBD = new Date(now.getFullYear(), DOB.getMonth(), DOB.getDate());
+  if(nextBD <= now) nextBD.setFullYear(now.getFullYear()+1);
+  const daysToNextBD = Math.ceil((nextBD - now) / 86400000);
+  document.getElementById('sNext').textContent = fmt(daysToNextBD);
+
+  // show cards with stagger
+  document.querySelectorAll('.stat-card').forEach((c,i) => {
+    setTimeout(()=>c.classList.add('in'), i*60);
+  });
+  ['lifeProgress','visualRow','dotsSection','quoteBlock','paperCard','extraStats'].forEach((id,i)=>{
+    setTimeout(()=>document.getElementById(id).classList.add('in'), 200+i*80);
+  });
+
+  // progress bar
+  document.getElementById('lpPct').textContent = (pct*100).toFixed(1)+'%';
+  setTimeout(()=>{
+    document.getElementById('lpFill').style.width = (pct*100)+'%';
+  }, 400);
+  buildPhaseBar();
+
+  // hourglass
+  updateHourglass(pct, dl, remain);
+
+  // weeks grid
+  buildWeeks(dl, total);
+
+  // year dots
+  buildDots(ageY);
+  document.getElementById('dotsSubtitle').textContent = ageY + ' سنة عشتها من أصل ' + LIFESPAN;
+
+  // extra stats
+  document.getElementById('esHeartbeats').textContent = fmtB(dl * 86400 * 1.1); // ~1.1 BPM avg
+  document.getElementById('esSleep').textContent      = fmt(Math.round(dl * 0.33));
+  document.getElementById('esMeals').textContent      = fmt(dl * 3);
+  document.getElementById('esFridays').textContent    = fmt(Math.floor(dl / 7));
+  document.getElementById('esRamadans').textContent   = fmt(Math.max(0, ageY - 7)); // start fasting ~7
+  document.getElementById('esSunrises').textContent   = fmt(dl);
+
+  // ticker
+  document.getElementById('ticker').classList.add('in');
+  startTicker();
+
+  // timelines
+  scrubAge = null;
+  renderTL();
+}
+
+/* ══════════════ ANIMATE NUMBERS ══════════════ */
+function animNumber(id, target, suffix){
+  const el = document.getElementById(id);
+  let cur = 0;
+  const step = Math.ceil(target / 40);
+  const iv = setInterval(()=>{
+    cur = Math.min(cur + step, target);
+    el.textContent = fmt(cur) + suffix;
+    if(cur >= target) clearInterval(iv);
+  }, 30);
+}
+
+/* ══════════════ PHASE BAR ══════════════ */
+function buildPhaseBar(){
+  const el = document.getElementById('lpPhases');
+  el.innerHTML = PHASE_COLORS.map(p =>
+    `<div class="lp-phase" style="background:${p.bg}22;color:${p.bg};border:1px solid ${p.bg}55;flex:${p.pct*10}">${p.label}</div>`
+  ).join('');
+}
+
+/* ══════════════ HOURGLASS ══════════════ */
+function updateHourglass(pct, dl, remain){
+  const topH = 67*(1-pct), botH = 67*pct;
+  document.getElementById('topSand').setAttribute('y', String(13+(67-topH)));
+  document.getElementById('topSand').setAttribute('height', String(topH));
+  document.getElementById('botSand').setAttribute('height', String(botH));
+  document.getElementById('hgDays').textContent = fmt(dl)+' / '+fmt(dl+remain);
+}
+
+/* ══════════════ WEEKS GRID ══════════════ */
+function buildWeeks(dl, total){
+  const grid  = document.getElementById('weeksGrid');
+  const totalW = Math.ceil(total / 7);
+  const livedW = Math.floor(dl / 7);
+  grid.innerHTML = '';
+  for(let w=0; w<totalW; w++){
+    const d = document.createElement('div');
+    d.className = 'wk';
+    const yr = Math.floor(w*7/365.25);
+    d.setAttribute('data-tip','أسبوع '+(w+1)+' · سنة '+(yr+1));
+    if(w < livedW)      d.classList.add('wk-l');
+    else if(w===livedW) d.classList.add('wk-c');
+    else                d.classList.add('wk-r');
+    grid.appendChild(d);
+  }
+}
+
+/* ══════════════ YEAR DOTS ══════════════ */
+function buildDots(ageY){
+  const grid = document.getElementById('dotsGrid');
+  grid.innerHTML = '';
+  for(let y=1; y<=LIFESPAN; y++){
+    const d = document.createElement('div');
+    d.className = 'yd';
+    d.setAttribute('data-y','سنة '+y);
+    if(y < ageY)       d.classList.add('yd-l');
+    else if(y===ageY)  d.classList.add('yd-c');
+    else               d.classList.add('yd-r');
+    grid.appendChild(d);
+  }
+}
+
+/* ══════════════ LIVE TICKER ══════════════ */
+function startTicker(){
+  if(tickerInterval) clearInterval(tickerInterval);
+  function update(){
+    const n = new Date();
+    const midnight = new Date(n.getFullYear(),n.getMonth(),n.getDate());
+    const secs = Math.floor((n-midnight)/1000);
+    const h = String(Math.floor(secs/3600)).padStart(2,'0');
+    const m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+    const s = String(secs%60).padStart(2,'0');
+    document.getElementById('tickerTime').textContent = h+':'+m+':'+s;
+  }
+  update();
+  tickerInterval = setInterval(update, 1000);
+}
+
+/* ══════════════════════════════════════════════
+   INTERACTIVE CANVAS TIMELINE
+══════════════════════════════════════════════ */
+
+// roundRect polyfill
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    if(typeof r==='number') r=[r,r,r,r];
+    this.beginPath();
+    this.moveTo(x+r[0],y);
+    this.lineTo(x+w-r[1],y); this.quadraticCurveTo(x+w,y,x+w,y+r[1]);
+    this.lineTo(x+w,y+h-r[2]); this.quadraticCurveTo(x+w,y+h,x+w-r[2],y+h);
+    this.lineTo(x+r[3],y+h); this.quadraticCurveTo(x,y+h,x,y+h-r[3]);
+    this.lineTo(x,y+r[0]); this.quadraticCurveTo(x,y,x+r[0],y);
+    this.closePath();
+  };
+}
+
+// Phases definition (days-based, relative to LIFESPAN)
+function getPhases(totalDays){
+  return [
+    { key:'golden',  nameAr:'النشأة الذهبية',  nameEn:'20 Golden Years',
+      s:0,           e:Math.round(totalDays*0.222),
+      color:'#5a9b6a', colorLight:'#7db88a44',
+      icon:'🌱' },
+    { key:'youth',   nameAr:'الشباب',           nameEn:'Youth',
+      s:Math.round(totalDays*0.222), e:Math.round(totalDays*0.333),
+      color:'#2980b9', colorLight:'#2980b944',
+      icon:'⚡' },
+    { key:'work',    nameAr:'العمل والإنتاج',   nameEn:'Work & Produce',
+      s:Math.round(totalDays*0.333), e:Math.round(totalDays*0.667),
+      color:'#d4803a', colorLight:'#d4803a44',
+      icon:'💼' },
+    { key:'mature',  nameAr:'النضج',            nameEn:'Mature',
+      s:Math.round(totalDays*0.667), e:Math.round(totalDays*0.833),
+      color:'#8e44ad', colorLight:'#8e44ad44',
+      icon:'🌿' },
+    { key:'wisdom',  nameAr:'الحكمة',           nameEn:'Wisdom',
+      s:Math.round(totalDays*0.833), e:totalDays,
+      color:'#7f8c8d', colorLight:'#7f8c8d44',
+      icon:'🕊️' },
+  ];
+}
+
+// Day milestone ticks
+const MILESTONE_TICKS = [
+  { d:0,     label:'الميلاد', sublabel:'Day 0' },
+  { d:7300,  label:'20 سنة',  sublabel:'7,300D' },
+  { d:9490,  label:'26 سنة',  sublabel:'9,490D' },
+  { d:13140, label:'36 سنة',  sublabel:'13,140D' },
+  { d:18615, label:'51 سنة',  sublabel:'18,615D' },
+];
+
+let TL_VIEW = 'days';
+let scrubAge = null;
+let tlAnimFrame = null;
+
+/* ─── View switcher ─── */
+function setView(v){
+  TL_VIEW = v;
+  ['Days','Years','Pct'].forEach(n=>{
+    document.getElementById('vb'+n).classList.toggle('active', n.toLowerCase()===v);
+  });
+  renderTL();
+}
+
+/* ─── Scrubber ─── */
+function onScrub(val){
+  scrubAge = parseFloat(val);
+  document.getElementById('scrubVal').textContent =
+    scrubAge.toFixed(1) + ' سنة · ' + fmt(Math.round(scrubAge*365.25)) + ' يوم';
+  renderTL();
+}
+
+/* ─── Main render entry ─── */
+function renderTL(){
+  if(tlAnimFrame){ cancelAnimationFrame(tlAnimFrame); tlAnimFrame=null; }
+  const c1 = document.getElementById('tlCanvas');
+  const c2 = document.getElementById('tlAge');
+  if(!c1||!c2) return;
+
+  const W = c1.parentElement.offsetWidth;
+  if(!W){ requestAnimationFrame(renderTL); return; }
+
+  const dpr = window.devicePixelRatio||1;
+  function sizeCanvas(c,h){
+    if(c._lastW!==W||c._lastH!==h){
+      c.width  = W*dpr; c.height=h*dpr;
+      c.style.width=W+'px'; c.style.height=h+'px';
+      c._lastW=W; c._lastH=h;
+    }
+  }
+  sizeCanvas(c1,180); sizeCanvas(c2,72);
+
+  const ctx1=c1.getContext('2d'); ctx1.setTransform(dpr,0,0,dpr,0,0);
+  const ctx2=c2.getContext('2d'); ctx2.setTransform(dpr,0,0,dpr,0,0);
+
+  const totalDays = TL_DAYS(LIFESPAN);
+  const phases    = getPhases(totalDays);
+
+  let curDays = null, curAge = null;
+  if(scrubAge !== null){
+    curAge = scrubAge;
+    curDays= Math.round(scrubAge * 365.25);
+  } else if(DOB){
+    curDays = Math.floor((new Date()-DOB)/86400000);
+    curAge  = curDays/365.25;
+  }
+
+  drawMainCanvas(ctx1, W, 180, totalDays, phases, curDays, curAge);
+  drawAgeCanvas (ctx2, W, 72,  totalDays, curAge);
+
+  document.getElementById('ageScrubber').max = LIFESPAN;
+  if(scrubAge===null && curAge!==null){
+    document.getElementById('ageScrubber').value = curAge.toFixed(1);
+    document.getElementById('scrubVal').textContent =
+      curAge.toFixed(1)+' سنة · '+fmt(curDays)+' يوم';
+  }
+  // keep pulsing
+  tlAnimFrame = requestAnimationFrame(renderTL);
+}
+
+/* ─── Draw Main Canvas ─── */
+function drawMainCanvas(ctx, W, H, totalDays, phases, curDays, curAge){
+  ctx.clearRect(0,0,W,H);
+
+  const PAD_L=14, PAD_R=28, ARROW=18;
+  const TW = W - PAD_L - PAD_R - ARROW;
+  const dayToX = d => PAD_L + (d/totalDays)*TW;
+  const yrToX  = y => PAD_L + (y/LIFESPAN)*TW;
+
+  // ── Background phase bands ──
+  phases.forEach(ph=>{
+    const x1 = dayToX(ph.s), x2 = dayToX(ph.e);
+    const grad = ctx.createLinearGradient(x1,0,x2,0);
+    grad.addColorStop(0, ph.color+'22');
+    grad.addColorStop(1, ph.color+'08');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x1, 8, x2-x1, 72);
+  });
+
+  // ── Filled "lived" portion ──
+  if(curDays!==null){
+    const x = dayToX(Math.min(curDays, totalDays));
+    const grad = ctx.createLinearGradient(PAD_L,0,x,0);
+    grad.addColorStop(0,  '#6b946588');
+    grad.addColorStop(0.5,'#c9a96e88');
+    grad.addColorStop(1,  '#b5541a88');
+    ctx.fillStyle = grad;
+    ctx.fillRect(PAD_L, 30, x-PAD_L, 20);
+  }
+
+  // ── Main thick arrow bar ──
+  const barY=30, barH=20;
+  const barGrad = ctx.createLinearGradient(PAD_L,0,PAD_L+TW,0);
+  barGrad.addColorStop(0,  '#a8a098');
+  barGrad.addColorStop(0.4,'#d8d0c8');
+  barGrad.addColorStop(0.8,'#c8c0b8');
+  barGrad.addColorStop(1,  '#b8b0a8');
+  ctx.fillStyle = barGrad;
+  ctx.beginPath();
+  ctx.roundRect(PAD_L, barY, TW, barH, [3,0,0,3]);
+  ctx.fill();
+
+  // Arrowhead
+  const ax = PAD_L+TW+ARROW;
+  ctx.fillStyle = '#b8b0a8';
+  ctx.beginPath();
+  ctx.moveTo(PAD_L+TW, barY-6);
+  ctx.lineTo(ax, barY+barH/2);
+  ctx.lineTo(PAD_L+TW, barY+barH+6);
+  ctx.closePath();
+  ctx.fill();
+
+  // Arrow sheen
+  const sheen = ctx.createLinearGradient(PAD_L, barY, PAD_L, barY+barH);
+  sheen.addColorStop(0,'rgba(255,255,255,.25)');
+  sheen.addColorStop(0.5,'rgba(255,255,255,.05)');
+  sheen.addColorStop(1,'rgba(0,0,0,.1)');
+  ctx.fillStyle = sheen;
+  ctx.beginPath();
+  ctx.roundRect(PAD_L, barY, TW, barH, [3,0,0,3]);
+  ctx.fill();
+
+  // ── Phase labels above bar ──
+  ctx.font = '600 10px Cairo, sans-serif';
+  ctx.textAlign = 'center';
+  phases.forEach(ph=>{
+    const x1=dayToX(ph.s), x2=dayToX(ph.e);
+    const mid=(x1+x2)/2, bw=x2-x1;
+    // bracket
+    ctx.strokeStyle = ph.color+'99';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x1+2,26); ctx.lineTo(x1+2,22);
+    ctx.lineTo(x2-2,22); ctx.lineTo(x2-2,26);
+    ctx.stroke();
+    // label
+    ctx.fillStyle = ph.color;
+    if(bw > 60){
+      ctx.fillText(ph.icon+' '+ph.nameAr, mid, 17);
+    } else if(bw>30){
+      ctx.fillText(ph.icon, mid, 17);
+    }
+  });
+
+  // ── Milestone ticks (show based on view) ──
+  const showTicks = TL_VIEW==='days' ? MILESTONE_TICKS :
+                    TL_VIEW==='years'? [{d:0,label:'الميلاد'},{d:totalDays*0.2,label:'20%'},{d:totalDays*0.4,label:'40%'},{d:totalDays*0.6,label:'60%'},{d:totalDays*0.8,label:'80%'},{d:totalDays,label:'نهاية'}] :
+                    MILESTONE_TICKS;
+
+  ctx.textAlign='center';
+  MILESTONE_TICKS.forEach(t=>{
+    const x = dayToX(t.d);
+    // tick line
+    ctx.strokeStyle = '#3a2a1088';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x,barY); ctx.lineTo(x,barY+barH); ctx.stroke();
+    // dot
+    ctx.fillStyle='#3a2a10';
+    ctx.beginPath(); ctx.arc(x,barY-1,3.5,0,Math.PI*2); ctx.fill();
+
+    // primary label below bar
+    ctx.fillStyle='#2a1a08';
+    ctx.font = 'bold 9.5px Caveat, cursive';
+    const lbl = TL_VIEW==='days'   ? t.sublabel :
+                TL_VIEW==='years'  ? (Math.round(t.d/365.25)+'y') :
+                                     ((t.d/totalDays*100).toFixed(0)+'%');
+    ctx.fillText(lbl, x, barY+barH+13);
+    // sublabel
+    ctx.fillStyle='#7a6848';
+    ctx.font='9px Cairo,sans-serif';
+    ctx.fillText(t.label, x, barY+barH+24);
+  });
+
+  // End tick
+  const ex = dayToX(totalDays);
+  ctx.strokeStyle='#3a2a1088'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ex,barY); ctx.lineTo(ex,barY+barH); ctx.stroke();
+  ctx.fillStyle='#2a1a08'; ctx.font='bold 9.5px Caveat,cursive'; ctx.textAlign='center';
+  ctx.fillText(LIFESPAN+'Y', ex, barY+barH+13);
+
+  // ── Phase under-brackets (Golden Years + Retirement) ──
+  const bracketPhases = [
+    {ph:phases[0], extraLabel:'~ '+fmt(phases[0].e-phases[0].s)+' يوم'},
+    {ph:phases[3], extraLabel:'~ '+fmt(phases[3].e-phases[3].s)+' يوم'},
+  ];
+  bracketPhases.forEach(({ph, extraLabel})=>{
+    const x1=dayToX(ph.s)+2, x2=dayToX(ph.e)-2;
+    const by=barY+barH+32, bh=8;
+    ctx.strokeStyle=ph.color+'cc'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(x1,by); ctx.lineTo(x1,by+bh);
+    ctx.lineTo(x2,by+bh); ctx.lineTo(x2,by);
+    ctx.stroke();
+    ctx.fillStyle=ph.color;
+    ctx.font='bold 9.5px Caveat,cursive'; ctx.textAlign='center';
+    const mid=(x1+x2)/2;
+    ctx.fillText(ph.nameEn||ph.nameAr, mid, by+bh+12);
+    ctx.font='italic 8.5px Caveat,cursive'; ctx.fillStyle='#7a5820';
+    ctx.fillText(extraLabel, mid, by+bh+24);
+  });
+
+  // ── "You are here" pin ──
+  if(curDays!==null && curDays>=0 && curDays<=totalDays){
+    const px2 = dayToX(curDays);
+    const pinY = barY - 2;
+
+    // vertical line down through bar
+    ctx.strokeStyle = '#c0392b';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(px2, pinY+4); ctx.lineTo(px2, barY+barH+4); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // pulsing circle (animated via manual anim)
+    const pulse = 0.5+0.5*Math.sin(Date.now()/400);
+    ctx.strokeStyle=`rgba(192,57,43,${0.2+0.3*pulse})`;
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(px2,pinY,10+4*pulse,0,Math.PI*2); ctx.stroke();
+
+    // main dot
+    ctx.fillStyle='white';
+    ctx.beginPath(); ctx.arc(px2,pinY,8,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#c0392b';
+    ctx.beginPath(); ctx.arc(px2,pinY,6,0,Math.PI*2); ctx.fill();
+
+    // label above
+    ctx.fillStyle='#c0392b';
+    ctx.font='bold 11px Cairo,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('أنت الآن', px2, pinY-14);
+
+    // day label below
+    const dayLbl = TL_VIEW==='days'  ? fmt(curDays)+' يوم' :
+                   TL_VIEW==='years' ? curAge.toFixed(1)+' سنة' :
+                   (curDays/totalDays*100).toFixed(1)+'%';
+    ctx.fillStyle='#7a5820';
+    ctx.font='9px Caveat,cursive'; ctx.textAlign='center';
+    ctx.fillText(dayLbl, px2, barY+barH+46);
+  }
+}
+
+/* ─── Draw Age Canvas ─── */
+function drawAgeCanvas(ctx, W, H, totalDays, curAge){
+  ctx.clearRect(0,0,W,H);
+
+  const PAD_L=14, PAD_R=28, ARROW=14;
+  const TW = W - PAD_L - PAD_R - ARROW;
+  const yrToX = a => PAD_L + (a/LIFESPAN)*TW;
+
+  // line
+  const ly=24;
+  ctx.strokeStyle='#a09080'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(PAD_L,ly); ctx.lineTo(PAD_L+TW,ly); ctx.stroke();
+
+  // arrowhead
+  ctx.fillStyle='#a09080';
+  ctx.beginPath();
+  ctx.moveTo(PAD_L+TW,ly-7); ctx.lineTo(PAD_L+TW+ARROW,ly); ctx.lineTo(PAD_L+TW,ly+7);
+  ctx.closePath(); ctx.fill();
+
+  // phase color segments
+  const phases = getPhases(totalDays);
+  phases.forEach(ph=>{
+    const x1=yrToX(ph.s/365.25), x2=yrToX(ph.e/365.25);
+    ctx.fillStyle=ph.color+'55';
+    ctx.fillRect(x1,ly-4,x2-x1,8);
+  });
+
+  // age ticks
+  const aTicks=[0,10,20,24,30,40,50,60,70,75,80,90].filter(a=>a<=LIFESPAN);
+  ctx.textAlign='center';
+  aTicks.forEach(a=>{
+    const x=yrToX(a);
+    ctx.strokeStyle='#3a2410aa'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x,ly); ctx.lineTo(x,ly+9); ctx.stroke();
+    ctx.fillStyle='#1e1208';
+    ctx.font='bold 9px Caveat,cursive';
+    ctx.fillText(a, x, ly+20);
+  });
+  // special labels
+  ctx.fillStyle='#7a5830'; ctx.font='8px Amiri,serif';
+  ctx.fillText('التقاعد', yrToX(60), ly+30);
+
+  // you-pin
+  if(curAge!==null && curAge>=0){
+    const px=yrToX(curAge);
+    // decade bracket
+    const d0=Math.floor(curAge/10)*10, d1=Math.min(d0+10,LIFESPAN);
+    const bx0=yrToX(d0), bx1=yrToX(d1);
+    ctx.strokeStyle='#c0392b99'; ctx.lineWidth=1.2;
+    ctx.beginPath();
+    ctx.moveTo(bx0,ly-10); ctx.lineTo(bx0,ly-6);
+    ctx.lineTo(bx1,ly-6); ctx.lineTo(bx1,ly-10);
+    ctx.stroke();
+    // bracket label
+    ctx.fillStyle='#c0392b'; ctx.font='bold 8.5px Caveat,cursive'; ctx.textAlign='center';
+    ctx.fillText('أنت هنا', (bx0+bx1)/2, ly-14);
+
+    // pin dot
+    ctx.fillStyle='white';
+    ctx.beginPath(); ctx.arc(px,ly,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#c0392b';
+    ctx.beginPath(); ctx.arc(px,ly,4.5,0,Math.PI*2); ctx.fill();
+  }
+}
+
+/* ─── Canvas mouse interaction ─── */
+function setupCanvasInteraction(){
+  const c = document.getElementById('tlCanvas');
+  if(!c) return;
+  const tt  = document.getElementById('tlTooltip');
+
+  c.addEventListener('mousemove', e=>{
+    const rect = c.getBoundingClientRect();
+    const mx   = e.clientX - rect.left;
+    const PAD_L=14, PAD_R=28, ARROW=18;
+    const TW = c.offsetWidth - PAD_L - PAD_R - ARROW;
+    const totalDays = TL_DAYS(LIFESPAN);
+    const phases = getPhases(totalDays);
+    const dayAtX = d => (d-PAD_L)/TW * totalDays;
+
+    const hoverDay = dayAtX(mx);
+    if(hoverDay<0||hoverDay>totalDays){ tt.classList.remove('show'); return; }
+
+    const hoverAge = hoverDay/365.25;
+    const ph = phases.find(p=>hoverDay>=p.s && hoverDay<p.e) || phases[phases.length-1];
+
+    // build tooltip
+    document.getElementById('ttTitle').textContent = ph.icon+' '+ph.nameAr;
+    const curDays = DOB ? Math.floor((new Date()-DOB)/86400000) : null;
+    const phaseDone = curDays!=null ? Math.max(0,Math.min(curDays-ph.s, ph.e-ph.s)) : 0;
+    const phasePct  = curDays!=null ? (phaseDone/(ph.e-ph.s)*100).toFixed(0) : '—';
+
+    document.getElementById('ttBody').innerHTML =
+      `<div class="tt-row"><span>اليوم:</span><span class="tt-val">${fmt(Math.round(hoverDay))}</span></div>
+       <div class="tt-row"><span>العمر:</span><span class="tt-val">${hoverAge.toFixed(1)} سنة</span></div>
+       <div class="tt-row"><span>المرحلة:</span><span class="tt-val">${ph.nameEn}</span></div>
+       <div class="tt-row"><span>أيام المرحلة:</span><span class="tt-val">${fmt(ph.e-ph.s)}</span></div>
+       ${curDays?`<div class="tt-row"><span>أنجزت:</span><span class="tt-val">${phasePct}%</span></div>`:''}`;
+
+    // position tooltip
+    tt.style.left = (e.clientX+14)+'px';
+    tt.style.top  = (e.clientY-40)+'px';
+    tt.classList.add('show');
+    c.style.cursor = 'crosshair';
+  });
+
+  c.addEventListener('mouseleave', ()=> tt.classList.remove('show'));
+
+  c.addEventListener('click', e=>{
+    const rect = c.getBoundingClientRect();
+    const mx   = e.clientX - rect.left;
+    const PAD_L=14, PAD_R=28, ARROW=18;
+    const TW = c.offsetWidth - PAD_L - PAD_R - ARROW;
+    const totalDays = TL_DAYS(LIFESPAN);
+    const phases = getPhases(totalDays);
+    const hoverDay = (mx-PAD_L)/TW * totalDays;
+    if(hoverDay<0||hoverDay>totalDays) return;
+
+    const ph = phases.find(p=>hoverDay>=p.s && hoverDay<p.e) || phases[phases.length-1];
+    showPhaseDetail(ph, totalDays);
+  });
+}
+
+function showPhaseDetail(ph, totalDays){
+  const panel = document.getElementById('phaseDetail');
+  const curDays = DOB ? Math.floor((new Date()-DOB)/86400000) : null;
+  const phaseDays = ph.e - ph.s;
+  const phaseDone = curDays!=null ? Math.max(0,Math.min(curDays-ph.s, phaseDays)) : null;
+  const phaseLeft = phaseDone!=null ? Math.max(0,phaseDays-phaseDone) : null;
+
+  document.getElementById('pdDot').style.background = ph.color;
+  document.getElementById('pdName').textContent = ph.icon+' '+ph.nameAr+' ('+ph.nameEn+')';
+
+  const startY = (ph.s/365.25).toFixed(1);
+  const endY   = (ph.e/365.25).toFixed(1);
+  const items  = [
+    {n:fmt(phaseDays),        d:'إجمالي أيام المرحلة'},
+    {n:startY+' — '+endY,    d:'من سنة إلى سنة'},
+    {n:fmt(Math.round(phaseDays/7)), d:'أسبوع'},
+    {n:fmt(Math.round(phaseDays/30.44)), d:'شهر'},
+  ];
+  if(phaseDone!=null){
+    items.push({n:fmt(phaseDone),      d:'يوم أنجزته ✅'});
+    items.push({n:fmt(phaseLeft),       d:'يوم متبقٍ ⏳'});
+    items.push({n:(phaseDone/phaseDays*100).toFixed(1)+'%', d:'مكتمل من المرحلة'});
+  }
+
+  document.getElementById('pdGrid').innerHTML = items.map(it=>
+    `<div class="pd-item"><div class="pd-num">${it.n}</div><div class="pd-desc">${it.d}</div></div>`
+  ).join('');
+
+  panel.classList.add('show');
+}
+
+/* ══════════════ RESIZE ══════════════ */
+window.addEventListener('resize', ()=>{
+  if(tlAnimFrame){ cancelAnimationFrame(tlAnimFrame); tlAnimFrame=null; }
+  // Reset canvas size flags
+  const c1=document.getElementById('tlCanvas');
+  const c2=document.getElementById('tlAge');
+  if(c1){c1._lastW=0;} if(c2){c2._lastW=0;}
+  renderTL();
+});
+
+/* ══════════════ BOOT ══════════════ */
+const storedDOB = localStorage.getItem('life_dob_v5');
+const storedLS  = localStorage.getItem('life_ls_v5');
+if(storedDOB){
+  LIFESPAN = storedLS ? +storedLS : 90;
+  DOB = new Date(storedDOB);
+  document.getElementById('setupOverlay').style.display = 'none';
+  init();
+} else {
+  renderTL();
+}
+setupCanvasInteraction();
+</script>
+</body>
+</html>

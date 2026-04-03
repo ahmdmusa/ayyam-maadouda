@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأيام المعدودة — الحياة عملية غير عكسية</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0a06;
+  --bg2:#120e08;
+  --gold:#c9a96e;
+  --gold-l:#e8c98a;
+  --rust:#b5541a;
+  --rust-l:#d4703a;
+  --sand:#f5efe0;
+  --faded:#5a4a32;
+  --faded2:#3a2e1e;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--sand);
+  font-family:'Cairo',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  direction:rtl;
+}
+
+/* ══════════════════════════════════════
+   GRAIN OVERLAY
+══════════════════════════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:100;
+}
+
+/* ══════════════════════════════════════
+   CANVAS BACKGROUND — falling sand
+══════════════════════════════════════ */
+#sandCanvas{
+  position:fixed;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  z-index:0;
+  opacity:.45;
+}
+
+/* ══════════════════════════════════════
+   HERO SECTION
+══════════════════════════════════════ */
+.hero{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 24px 80px;
+  text-align:center;
+}
+
+/* Top badge */
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--faded);
+  border-radius:30px;padding:6px 18px;
+  font-size:.7rem;letter-spacing:3px;
+  color:var(--gold);
+  font-family:'Bebas Neue',sans-serif;
+  margin-bottom:40px;
+  animation:fadeSlideDown .8s ease both;
+  text-transform:uppercase;
+  direction:ltr;
+}
+.badge::before,.badge::after{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--rust);display:block;
+}
+
+/* Arabic eyebrow */
+.eyebrow{
+  font-family:'Amiri',serif;
+  font-size:clamp(.85rem,2vw,1rem);
+  color:var(--gold);
+  letter-spacing:1px;
+  margin-bottom:20px;
+  opacity:.8;
+  animation:fadeSlideDown .9s .1s ease both;
+}
+
+/* Main headline */
+.headline{
+  font-family:'Amiri',serif;
+  font-size:clamp(2.8rem,9vw,6.5rem);
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:-1px;
+  margin-bottom:12px;
+  animation:fadeSlideDown 1s .2s ease both;
+  background:linear-gradient(160deg,var(--sand) 0%,var(--gold-l) 50%,var(--gold) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.headline em{
+  font-style:italic;
+  -webkit-text-fill-color:transparent;
+  background:linear-gradient(120deg,var(--rust-l),var(--rust));
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+
+/* Subtitle */
+.sub{
+  font-size:clamp(.9rem,2.2vw,1.15rem);
+  color:rgba(245,239,224,.55);
+  max-width:560px;margin:0 auto;
+  line-height:2;
+  font-weight:300;
+  margin-bottom:52px;
+  animation:fadeSlideDown 1s .35s ease both;
+}
+
+/* CTA group */
+.cta-group{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;
+  animation:fadeSlideDown 1s .5s ease both;
+}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:15px 36px;
+  background:linear-gradient(135deg,var(--rust),var(--rust-l));
+  color:white;border:none;border-radius:6px;
+  font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;
+  cursor:pointer;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(181,84,26,.4);
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  pointer-events:none;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(181,84,26,.55);}
+.btn-primary .arr{transition:transform .2s;}
+.btn-primary:hover .arr{transform:translateX(-4px);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:15px 30px;
+  background:transparent;
+  color:var(--gold);
+  border:1.5px solid var(--faded);
+  border-radius:6px;
+  font-family:'Cairo',sans-serif;font-size:.9rem;
+  cursor:pointer;text-decoration:none;
+  transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--gold);background:rgba(201,169,110,.07);}
+
+/* ══════════════════════════════════════
+   ANIMATED HOURGLASS (CSS)
+══════════════════════════════════════ */
+.hg-container{
+  position:relative;
+  margin:0 auto 56px;
+  width:80px;height:120px;
+  animation:fadeSlideDown .9s .15s ease both, hgFloat 4s ease-in-out infinite;
+}
+@keyframes hgFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+.hg-svg{filter:drop-shadow(0 0 18px rgba(201,169,110,.25));}
+
+/* Sand particles in SVG animating */
+.sand-particle{
+  animation:sandFall linear infinite;
+  transform-origin:center;
+}
+@keyframes sandFall{
+  0%  {transform:translateY(-30px) scaleY(0.5);opacity:0;}
+  15% {opacity:1;}
+  85% {opacity:1;}
+  100%{transform:translateY(30px) scaleY(0.5);opacity:0;}
+}
+
+/* ══════════════════════════════════════
+   DIVIDER LINE
+══════════════════════════════════════ */
+.divider-line{
+  width:1px;height:80px;
+  background:linear-gradient(to bottom,transparent,var(--faded),transparent);
+  margin:0 auto 60px;
+  animation:fadeSlideDown 1s .7s ease both;
+}
+
+/* ══════════════════════════════════════
+   FEATURES SECTION
+══════════════════════════════════════ */
+.features{
+  position:relative;z-index:10;
+  padding:80px 24px 100px;
+  max-width:900px;margin:0 auto;
+}
+
+.features-label{
+  text-align:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.75rem;letter-spacing:5px;
+  color:var(--faded);margin-bottom:16px;
+  direction:ltr;
+}
+.features-title{
+  text-align:center;
+  font-family:'Amiri',serif;
+  font-size:clamp(1.6rem,4vw,2.6rem);
+  color:var(--sand);margin-bottom:60px;
+  line-height:1.4;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:2px;
+}
+
+.feat{
+  background:var(--bg2);
+  border:1px solid var(--faded2);
+  padding:32px 28px;
+  position:relative;
+  overflow:hidden;
+  cursor:default;
+  transition:border-color .3s,background .3s;
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s ease,border-color .3s,background .3s;
+}
+.feat.vis{opacity:1;transform:translateY(0);}
+.feat:hover{border-color:var(--faded);background:#181008;}
+
+.feat::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--rust),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.feat:hover::before{opacity:1;}
+
+.feat-icon{
+  font-size:2rem;margin-bottom:16px;display:block;
+  filter:grayscale(0.3);transition:filter .3s;
+}
+.feat:hover .feat-icon{filter:none;}
+
+.feat-title{
+  font-family:'Amiri',serif;
+  font-size:1.1rem;font-weight:700;
+  color:var(--gold-l);margin-bottom:8px;
+}
+.feat-desc{
+  font-size:.82rem;color:rgba(245,239,224,.45);
+  line-height:1.9;font-weight:300;
+}
+
+/* ══════════════════════════════════════
+   QUOTE SECTION
+══════════════════════════════════════ */
+.quote-section{
+  position:relative;z-index:10;
+  padding:60px 24px 80px;
+  text-align:center;
+  border-top:1px solid var(--faded2);
+  border-bottom:1px solid var(--faded2);
+  background:linear-gradient(to bottom,var(--bg2),var(--bg));
+}
+.quote-mark{
+  font-family:'Amiri',serif;
+  font-size:120px;line-height:.6;
+  color:rgba(201,169,110,.06);
+  display:block;margin-bottom:20px;
+}
+.quote-text{
+  font-family:'Amiri',serif;
+  font-size:clamp(1.1rem,3vw,1.8rem);
+  color:var(--gold);
+  line-height:1.9;
+  max-width:680px;margin:0 auto 20px;
+}
+.quote-src{
+  font-size:.78rem;color:var(--faded);
+  letter-spacing:1px;
+}
+
+/* ══════════════════════════════════════
+   STATS ROW
+══════════════════════════════════════ */
+.stats-row{
+  position:relative;z-index:10;
+  display:flex;justify-content:center;
+  gap:0;flex-wrap:wrap;
+  padding:60px 24px;
+  max-width:700px;margin:0 auto;
+}
+.stat-item{
+  flex:1;min-width:150px;
+  text-align:center;
+  padding:28px 20px;
+  border-left:1px solid var(--faded2);
+  opacity:0;transform:translateY(20px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.stat-item:first-child{border-left:none;}
+.stat-item.vis{opacity:1;transform:translateY(0);}
+.stat-big{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.8rem;color:var(--rust-l);
+  line-height:1;margin-bottom:6px;
+  direction:ltr;
+}
+.stat-lbl{font-size:.75rem;color:var(--faded);font-weight:600;}
+
+/* ══════════════════════════════════════
+   FINAL CTA SECTION
+══════════════════════════════════════ */
+.final-cta{
+  position:relative;z-index:10;
+  text-align:center;padding:80px 24px 120px;
+}
+.final-cta h2{
+  font-family:'Amiri',serif;
+  font-size:clamp(1.8rem,5vw,3rem);
+  color:var(--sand);
+  margin-bottom:16px;line-height:1.4;
+}
+.final-cta p{
+  font-size:.9rem;color:rgba(245,239,224,.4);
+  margin-bottom:36px;max-width:440px;margin-left:auto;margin-right:auto;
+  line-height:1.9;
+}
+.final-cta .btn-primary{font-size:1.05rem;padding:18px 44px;}
+
+/* ══════════════════════════════════════
+   SCROLL INDICATOR
+══════════════════════════════════════ */
+.scroll-hint{
+  position:absolute;bottom:30px;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  font-size:.65rem;letter-spacing:3px;color:var(--faded);
+  font-family:'Bebas Neue',sans-serif;direction:ltr;
+  animation:fadeSlideDown 1s .9s ease both;
+}
+.scroll-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--rust);
+  animation:scrollBounce 1.8s ease-in-out infinite;
+}
+@keyframes scrollBounce{
+  0%,100%{transform:translateY(0);opacity:.3;}
+  50%{transform:translateY(8px);opacity:1;}
+}
+
+/* ══════════════════════════════════════
+   FADE ANIMATION
+══════════════════════════════════════ */
+@keyframes fadeSlideDown{
+  from{opacity:0;transform:translateY(-20px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{
+  position:relative;z-index:10;
+  text-align:center;padding:24px;
+  border-top:1px solid var(--faded2);
+  font-size:.72rem;color:var(--faded);
+  font-family:'Cairo',sans-serif;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:600px){
+  .features-grid{grid-template-columns:1fr;}
+  .stats-row{flex-direction:column;gap:0;}
+  .stat-item{border-left:none;border-top:1px solid var(--faded2);}
+  .stat-item:first-child{border-top:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- FALLING SAND CANVAS -->
+<canvas id="sandCanvas"></canvas>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+
+  <div class="badge">Life is an Irreversible Process</div>
+
+  <!-- Hourglass -->
+  <div class="hg-container">
+    <svg class="hg-svg" width="80" height="120" viewBox="0 0 80 120">
+      <!-- Frame -->
+      <rect x="4" y="2"  width="72" height="6" rx="3" fill="#c9a96e" opacity=".9"/>
+      <rect x="4" y="112" width="72" height="6" rx="3" fill="#c9a96e" opacity=".9"/>
+      <line x1="4"  y1="5"   x2="40" y2="58" stroke="#c9a96e" stroke-width="2" opacity=".7"/>
+      <line x1="76" y1="5"   x2="40" y2="58" stroke="#c9a96e" stroke-width="2" opacity=".7"/>
+      <line x1="4"  y1="115" x2="40" y2="62" stroke="#c9a96e" stroke-width="2" opacity=".7"/>
+      <line x1="76" y1="115" x2="40" y2="62" stroke="#c9a96e" stroke-width="2" opacity=".7"/>
+
+      <!-- Top sand (remaining) -->
+      <clipPath id="tc"><polygon points="4,8 76,8 40,58"/></clipPath>
+      <rect x="4" y="8" width="72" height="50" fill="#6b9465" opacity=".7" clip-path="url(#tc)"/>
+
+      <!-- Bottom sand (lived) -->
+      <clipPath id="bc"><polygon points="4,112 76,112 40,62"/></clipPath>
+      <rect x="4" y="62" width="72" height="50" fill="#b5541a" opacity=".65" clip-path="url(#bc)"/>
+
+      <!-- Center drip particles -->
+      <circle class="sand-particle" cx="40" cy="58" r="1.5" fill="#c9a96e" style="animation-duration:1.2s;animation-delay:0s"/>
+      <circle class="sand-particle" cx="39" cy="58" r="1"   fill="#c9a96e" style="animation-duration:1.2s;animation-delay:.4s"/>
+      <circle class="sand-particle" cx="41" cy="58" r="1.2" fill="#c9a96e" style="animation-duration:1.2s;animation-delay:.8s"/>
+
+      <!-- Center pinch dot -->
+      <circle cx="40" cy="60" r="3" fill="#0d0a06"/>
+      <circle cx="40" cy="60" r="2" fill="#c9a96e" opacity=".5"/>
+    </svg>
+  </div>
+
+  <div class="eyebrow">الحياة عملية غير عكسية</div>
+
+  <h1 class="headline">
+    الأيام<br>
+    <em>المعدودة</em>
+  </h1>
+
+  <p class="sub">
+    حياتك ليست سنوات بعيدة —<br>
+    هي أيام تتساقط الآن، في هذه اللحظة، بلا توقف ولا عودة.<br>
+    كم يوماً مضى؟ وكم تبقّى؟
+  </p>
+
+  <div class="cta-group">
+    <a href="app.html" class="btn-primary">
+      <span class="arr">←</span>
+      ابدأ رحلتي الزمنية
+    </a>
+    <a href="#features" class="btn-secondary">
+      اكتشف الأداة
+    </a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-dot"></div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     STATS
+══════════════════════════════════════ -->
+<div class="stats-row" id="statsRow">
+  <div class="stat-item">
+    <div class="stat-big" id="sDays">32,850</div>
+    <div class="stat-lbl">يوم تملكها في حياتك (90 سنة)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-big">4,680</div>
+    <div class="stat-lbl">أسبوع — كل واحد لا يعود</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-big">1</div>
+    <div class="stat-lbl">حياة. فقط. لا استعادة</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     QUOTE
+══════════════════════════════════════ -->
+<div class="quote-section">
+  <span class="quote-mark">"</span>
+  <div class="quote-text">
+    كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ
+  </div>
+  <div class="quote-src">— رواه البخاري، عن ابن عمر رضي الله عنه</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FEATURES
+══════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="features-label">ما ستجده في الأداة</div>
+  <h2 class="features-title">أداة تحفيزية بصرية<br>لكسر التسويف وإدراك قيمة الوقت</h2>
+
+  <div class="features-grid">
+    <div class="feat">
+      <span class="feat-icon">⏳</span>
+      <div class="feat-title">خط زمني تفاعلي</div>
+      <div class="feat-desc">canvas مرسوم بالكامل — مرر الماوس لرؤية أي يوم في حياتك، اضغط لمعرفة تفاصيل كل مرحلة.</div>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📊</span>
+      <div class="feat-title">8 إحصائيات شخصية</div>
+      <div class="feat-desc">عمرك · رقم يومك · أسابيع عشتها · شهور · نسبة العمر · أيام لعيد ميلادك القادم.</div>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🟩</span>
+      <div class="feat-title">شبكة الأيام والأسابيع</div>
+      <div class="feat-desc">كل مربع = سنة من حياتك. كل مربع صغير = أسبوع. شاهد بصرياً ما مضى وما تبقّى.</div>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🎚️</span>
+      <div class="feat-title">Scrubber زمني</div>
+      <div class="feat-desc">استكشف أي عمر تريده — تحرك على الخط الزمني بحرية وشاهد الحسابات تتغير لحظياً.</div>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">💓</span>
+      <div class="feat-title">حسابات الحياة الكاملة</div>
+      <div class="feat-desc">ضربات قلبك · أيام نومك · وجبات أكلتها · رمضانات صمتها · جمع مرت عليك.</div>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">⚙️</span>
+      <div class="feat-title">إعدادات كاملة</div>
+      <div class="feat-desc">غير تاريخ ميلادك أو العمر المتوقع في أي وقت. محفوظ محلياً على جهازك فقط.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FINAL CTA
+══════════════════════════════════════ -->
+<section class="final-cta">
+  <h2>لا تنتظر اللحظة المناسبة.<br>هذه هي اللحظة.</h2>
+  <p>
+    كل يوم تؤجله هو يوم يُضاف إلى ما مضى،<br>لا إلى ما قادم.
+  </p>
+  <a href="app.html" class="btn-primary">
+    <span class="arr">←</span>
+    ابدأ الآن — مجاناً وبدون إنترنت
+  </a>
+</section>
+
+<footer>
+  الأيام المعدودة · الحياة عملية غير عكسية · <span dir="ltr">2025</span>
+</footer>
+
+<!-- ══════════════════════════════════════
+     FALLING SAND PARTICLES (Canvas)
+══════════════════════════════════════ -->
+<script>
+/* ── Sand particle system ── */
+const canvas = document.getElementById('sandCanvas');
+const ctx    = canvas.getContext('2d');
+let particles = [];
+let W, H;
+
+function resize(){
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle{
+  constructor(){this.reset(true);}
+  reset(initial=false){
+    this.x    = Math.random()*W;
+    this.y    = initial ? Math.random()*H : -6;
+    this.size = Math.random()*1.8+0.4;
+    this.speed= Math.random()*0.6+0.2;
+    this.opacity = Math.random()*0.25+0.05;
+    this.drift= (Math.random()-.5)*0.15;
+    this.life = 0;
+    this.maxLife = (H/this.speed)*(0.8+Math.random()*0.4);
+  }
+  update(){
+    this.y += this.speed;
+    this.x += this.drift;
+    this.life++;
+    if(this.y > H+10 || this.life > this.maxLife) this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.globalAlpha = this.opacity * Math.min(1,this.life/60) * Math.min(1,(this.maxLife-this.life)/60);
+    ctx.fillStyle   = '#c9a96e';
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// init particles
+for(let i=0;i<200;i++) particles.push(new Particle());
+
+// Add more gradually for vertical stream effect
+let streamX = W/2;
+function addStream(){
+  if(particles.length < 350){
+    const p = new Particle();
+    p.x = streamX + (Math.random()-.5)*4;
+    p.y = -4;
+    p.size = Math.random()*1.2+0.6;
+    p.opacity = Math.random()*.3+.1;
+    p.speed = Math.random()*.9+.4;
+    particles.push(p);
+  }
+}
+
+function animLoop(){
+  ctx.clearRect(0,0,W,H);
+  // subtle vignette
+  const vg = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.7);
+  vg.addColorStop(0,'transparent');
+  vg.addColorStop(1,'rgba(13,10,6,.6)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0,0,W,H);
+
+  addStream();
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+
+/* ── Intersection Observer for scroll animations ── */
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      // stagger children if it's a parent
+    }
+  });
+},{threshold:.15});
+
+document.querySelectorAll('.feat,.stat-item').forEach((el,i)=>{
+  el.style.transitionDelay = (i%3*0.12)+'s';
+  obs.observe(el);
+});
+
+/* ── Live day counter in stats ── */
+function updateDayCount(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(),0,1);
+  const dayOfYear = Math.ceil((now-start)/86400000);
+  // Show today's date as "Day N of the year" in the first stat
+  // We keep static for philosophy, but animate on load
+  const el = document.getElementById('sDays');
+  if(!el) return;
+  let cur=0, target=32850;
+  const step=Math.ceil(target/50);
+  const iv=setInterval(()=>{
+    cur=Math.min(cur+step,target);
+    el.textContent=cur.toLocaleString('en-US');
+    if(cur>=target)clearInterval(iv);
+  },25);
+}
+// Trigger after short delay
+setTimeout(updateDayCount, 600);
+</script>
+</body>
+</html>
