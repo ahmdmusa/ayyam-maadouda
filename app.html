@@ -475,19 +475,133 @@ h1{font-family:'Amiri',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;co
 
 footer{text-align:center;padding-top:22px;border-top:1px solid var(--paper-dark);font-size:11px;color:var(--faded);}
 
-@media(max-width:600px){
+/* ══ TABLET ≤768px ══ */
+@media(max-width:768px){
   .wrap{padding:20px 14px 40px;}
-  .paper-card{padding:24px 18px 28px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .visual-row{grid-template-columns:1fr;}
+  h1{font-size:1.8rem;}
+  .subtitle{font-size:12px;}
+  .header-top{justify-content:center;}
+  .ticker{flex-direction:column;gap:6px;text-align:center;padding:14px 16px;}
+  .ticker-time{font-size:1.3rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .stat-num{font-size:1.4rem;}
+  .stat-label{font-size:9px;}
+  .lp-phase{font-size:.6rem;}
+  .visual-row{grid-template-columns:1fr;gap:12px;}
+  .hg-wrap{flex-direction:row;gap:16px;justify-content:flex-start;min-width:unset;}
+  .wk{width:6px;height:6px;}
+  .weeks-grid{max-height:140px;}
+  .yd{width:9px;height:9px;}
+  .extra-stats{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .es-icon{font-size:1.2rem;}
+  .es-val{font-size:1rem;}
+  .es-desc{font-size:9px;}
+  .tl-card{padding:20px 14px 24px;}
+  .tl-header{flex-direction:column;align-items:flex-start;gap:10px;}
+  .tl-view-btns{align-self:flex-end;}
+  .tl-scrubber{font-size:.75rem;gap:8px;}
+  .pd-grid{grid-template-columns:repeat(2,1fr);}
+  .settings-card{padding:28px 24px;}
+  .quote-block{padding:22px 20px;}
+  .qt{font-size:1rem;}
 }
 
+/* ══ MOBILE ≤480px ══ */
+@media(max-width:480px){
+  .wrap{padding:14px 10px 32px;}
+  h1{font-size:1.5rem;margin-bottom:8px;}
+  .header-label{font-size:9px;letter-spacing:2px;}
+  .subtitle{font-size:11px;line-height:1.7;}
+  .btn-settings{font-size:.72rem;padding:6px 12px;}
+  .ticker{padding:12px 14px;}
+  .ticker-label{font-size:.8rem;}
+  .ticker-time{font-size:1.15rem;letter-spacing:1px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .stat-card{padding:12px 8px;}
+  .stat-num{font-size:1.2rem;}
+  .stat-label{font-size:8px;}
+  .lp-phases{display:none;}
+  .lp-title{font-size:.9rem;}
+  .hg-wrap{padding:14px 12px;}
+  .hg-days{font-size:.75rem;}
+  .wk{width:5px;height:5px;}
+  .weeks-grid{gap:1px;max-height:120px;}
+  .weeks-title{font-size:.85rem;}
+  .yd{width:8px;height:8px;}
+  .dots-grid{gap:2px;}
+  .sec-title{font-size:.9rem;}
+  .extra-stats{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .es-card{padding:10px;gap:8px;}
+  .es-icon{font-size:1.1rem;}
+  .es-val{font-size:.9rem;}
+  .es-desc{font-size:8px;line-height:1.4;}
+  .quote-block{padding:18px 16px;margin-bottom:24px;}
+  .qt{font-size:.9rem;line-height:1.8;}
+  .qs{font-size:.7rem;}
+  .tl-card{padding:16px 10px 20px;}
+  .tl-en{font-size:.78rem;}
+  .tl-ar{font-size:.85rem;}
+  .tl-view-btns{gap:4px;}
+  .tl-view-btn{padding:4px 10px;font-size:.7rem;}
+  .tl-scrubber{flex-wrap:wrap;gap:6px;}
+  .tl-scrubber input[type=range]{width:100%;}
+  .scrub-val{font-size:.8rem;text-align:center;width:100%;}
+  .pd-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .pd-item{padding:8px;}
+  .pd-num{font-size:1.1rem;}
+  .pd-desc{font-size:9px;}
+  .setup-card{padding:32px 24px;}
+  .setup-card h2{font-size:1.4rem;}
+  .settings-card{padding:24px 18px;}
+  footer{font-size:.7rem;}
+  .btn-print{padding:10px 22px;font-size:.85rem;}
+  #tlTooltip{
+    position:fixed;
+    bottom:16px !important;top:auto !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:calc(100vw - 32px);
+    max-width:340px;
+    font-size:.8rem;
+  }
+}
+
+/* ══════════════════════════════════════
+   PRINT STYLES — A4 Professional Layout
+══════════════════════════════════════ */
 @media print{
-  body{background:white;}
-  body::before{display:none;}
-  #setupOverlay,#settingsPanel,.btn-settings,.btn-print,.print-wrap,.ticker{display:none!important;}
-  .stat-card,.life-progress,.visual-row,.dots-section,.quote-block,.paper-card,.extra-stats{opacity:1!important;transform:none!important;}
-  .wrap{padding:16px;}
+  /* Hide everything on screen that shouldn't print */
+  body{background:white!important;color:#1a1208!important;}
+  body::before{display:none!important;}
+
+  /* Hide interactive UI */
+  #setupOverlay,#settingsPanel,
+  .btn-settings,.print-wrap,.ticker,
+  .tl-card,.tl-svg-wrap,.tl-scrubber,
+  .tl-age-wrap,.tl-view-btns,.phase-detail,
+  #tlTooltip,.dots-section,.visual-row,
+  .quote-block,.extra-stats,
+  footer,.divider,header .subtitle{
+    display:none!important;
+  }
+
+  /* Show ONLY the print sheet */
+  #printSheet{display:block!important;}
+
+  /* Prevent orphaned elements */
+  .ps-stat-grid, .ps-phase-row,
+  .ps-tl-wrap, .ps-dots-wrap{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+
+  /* Reset wrap */
+  .wrap{padding:0!important;max-width:100%!important;}
+
+  /* Stats visible */
+  .stats-grid,.life-progress{
+    opacity:1!important;transform:none!important;
+  }
 }
 </style>
 </head>
@@ -677,7 +791,317 @@ footer{text-align:center;padding-top:22px;border-top:1px solid var(--paper-dark)
   </div>
 
   <div class="print-wrap">
-    <button class="btn-print" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn-print" onclick="doPrint()">🖨️ طباعة تقرير منسق</button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       PRINT SHEET — only visible when printing
+  ══════════════════════════════════════ -->
+  <div id="printSheet" style="display:none">
+    <style>
+      /* Print sheet internal styles */
+      #printSheet{
+        font-family:'Cairo',sans-serif;
+        direction:rtl;
+        color:#1a1208;
+        background:white;
+        padding:0;
+        width:100%;
+      }
+
+      /* ── Page header ── */
+      .ps-page-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        padding:0 0 16px;
+        border-bottom:2px solid #1a1208;
+        margin-bottom:20px;
+      }
+      .ps-title-ar{
+        font-family:'Amiri',serif;
+        font-size:22pt;font-weight:700;
+        color:#1a1208;line-height:1.2;
+      }
+      .ps-title-en{
+        font-size:9pt;color:#8c7a5e;
+        font-family:'Special Elite',serif;
+        letter-spacing:.5px;margin-top:4px;
+      }
+      .ps-date-block{
+        text-align:left;direction:ltr;
+      }
+      .ps-date-main{font-size:11pt;font-weight:700;color:#1a1208;}
+      .ps-date-sub{font-size:8pt;color:#8c7a5e;margin-top:2px;}
+
+      /* ── Section heading ── */
+      .ps-section-title{
+        font-family:'Amiri',serif;
+        font-size:12pt;font-weight:700;
+        color:#1a1208;
+        padding:6px 10px;
+        border-right:4px solid #b5541a;
+        background:#f5efe0;
+        margin:16px 0 10px;
+      }
+
+      /* ── Stats grid ── */
+      .ps-stat-grid{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:8px;
+        margin-bottom:16px;
+      }
+      .ps-stat{
+        border:1px solid #e8dfc8;
+        border-radius:6px;
+        padding:10px 8px;
+        text-align:center;
+        background:#fafaf5;
+        position:relative;
+        overflow:hidden;
+      }
+      .ps-stat::before{
+        content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      }
+      .ps-stat-num{
+        font-family:'Bebas Neue',sans-serif;
+        font-size:18pt;line-height:1;
+        margin-bottom:3px;direction:ltr;
+      }
+      .ps-stat-lbl{font-size:7pt;color:#8c7a5e;font-weight:600;}
+
+      /* ── Life progress bar ── */
+      .ps-progress-wrap{margin-bottom:16px;}
+      .ps-prog-header{
+        display:flex;justify-content:space-between;
+        font-size:9pt;margin-bottom:5px;
+      }
+      .ps-prog-title{font-family:'Amiri',serif;font-weight:700;}
+      .ps-prog-pct{font-family:'Bebas Neue',sans-serif;font-size:13pt;color:#b5541a;}
+      .ps-prog-track{
+        height:12px;background:#e8dfc8;border-radius:6px;
+        overflow:hidden;position:relative;
+      }
+      .ps-prog-fill{
+        height:100%;border-radius:6px;
+        background:linear-gradient(90deg,#6b9465,#c9a96e,#b5541a);
+      }
+      .ps-phases-row{
+        display:flex;gap:3px;margin-top:6px;
+      }
+      .ps-phase-seg{
+        flex:1;height:10px;border-radius:2px;
+        position:relative;
+      }
+
+      /* ── Timeline static image ── */
+      .ps-tl-wrap{
+        margin-bottom:16px;
+        border:1px solid #e8dfc8;
+        border-radius:6px;
+        overflow:hidden;
+        background:#fafaf3;
+      }
+      .ps-tl-inner{padding:12px 16px 6px;}
+      .ps-tl-title-row{
+        display:flex;justify-content:space-between;
+        margin-bottom:10px;
+      }
+      .ps-tl-en{font-family:'Special Elite',serif;font-size:8pt;color:#2a1a08;}
+      .ps-tl-ar{font-family:'Amiri',serif;font-size:9pt;color:#2a1a08;direction:rtl;text-decoration:underline;}
+      #ps-tl-img{
+        width:100%;height:auto;
+        display:block;
+        image-rendering:crisp-edges;
+      }
+
+      /* ── Phases table ── */
+      .ps-phases-table{
+        width:100%;border-collapse:collapse;
+        font-size:8.5pt;margin-bottom:16px;
+      }
+      .ps-phases-table th{
+        background:#1a1208;color:white;
+        padding:6px 8px;text-align:center;
+        font-family:'Amiri',serif;font-size:9pt;
+        font-weight:700;
+      }
+      .ps-phases-table th:first-child{text-align:right;}
+      .ps-phases-table td{
+        padding:6px 8px;border-bottom:1px solid #e8dfc8;
+        text-align:center;
+        font-size:8pt;
+      }
+      .ps-phases-table td:first-child{
+        text-align:right;font-family:'Amiri',serif;
+        font-weight:700;font-size:9pt;
+      }
+      .ps-phases-table tr:nth-child(even) td{background:#fafaf5;}
+      .ps-phase-dot{
+        display:inline-block;
+        width:8px;height:8px;border-radius:2px;
+        vertical-align:middle;margin-left:4px;
+      }
+      .ps-current-row td{background:#fff3e0!important;font-weight:700;}
+
+      /* ── Year dots ── */
+      .ps-dots-wrap{
+        border:1px solid #e8dfc8;border-radius:6px;
+        padding:12px;background:#fafaf5;
+        margin-bottom:16px;
+      }
+      .ps-dots-grid{
+        display:flex;flex-wrap:wrap;gap:2px;direction:ltr;
+        margin-top:8px;
+      }
+      .ps-yd{
+        width:9px;height:9px;border-radius:2px;
+      }
+      .ps-yd-l{background:#6b9465;}
+      .ps-yd-c{background:#b5541a;}
+      .ps-yd-r{background:#e8dfc8;}
+      .ps-dots-legend{
+        display:flex;gap:14px;font-size:7.5pt;
+        color:#8c7a5e;margin-bottom:6px;
+      }
+      .ps-dl-dot{
+        width:8px;height:8px;border-radius:1px;
+        display:inline-block;vertical-align:middle;margin-left:3px;
+      }
+
+      /* ── Extra stats ── */
+      .ps-extra-grid{
+        display:grid;grid-template-columns:repeat(3,1fr);
+        gap:8px;margin-bottom:16px;
+      }
+      .ps-extra-card{
+        border:1px solid #e8dfc8;border-radius:6px;
+        padding:10px;display:flex;align-items:center;gap:8px;
+        background:#fafaf5;
+      }
+      .ps-extra-icon{font-size:14pt;}
+      .ps-extra-val{font-family:'Bebas Neue',sans-serif;font-size:13pt;color:#1a1208;direction:ltr;}
+      .ps-extra-lbl{font-size:7pt;color:#8c7a5e;}
+
+      /* ── Quote ── */
+      .ps-quote{
+        border-right:4px solid #c9a96e;
+        padding:12px 16px;
+        background:#f5efe0;
+        border-radius:0 6px 6px 0;
+        margin-bottom:16px;
+        text-align:center;
+      }
+      .ps-quote-text{
+        font-family:'Amiri',serif;font-size:13pt;
+        color:#1a1208;line-height:1.8;
+      }
+      .ps-quote-src{font-size:8pt;color:#8c7a5e;margin-top:4px;}
+
+      /* ── Page footer ── */
+      .ps-page-footer{
+        display:flex;justify-content:space-between;
+        align-items:center;
+        padding-top:12px;
+        border-top:1px solid #e8dfc8;
+        font-size:7.5pt;color:#8c7a5e;
+        margin-top:8px;
+      }
+      .ps-footer-logo{
+        font-family:'Amiri',serif;font-size:10pt;
+        color:#1a1208;font-weight:700;
+      }
+      .ps-footer-url{direction:ltr;font-family:'Special Elite',serif;}
+    </style>
+
+    <!-- PAGE HEADER -->
+    <div class="ps-page-header">
+      <div>
+        <div class="ps-title-ar">الأيام المعدودة</div>
+        <div class="ps-title-en">Life is an Irreversible Process</div>
+      </div>
+      <div class="ps-date-block">
+        <div class="ps-date-main" id="ps-date-main">—</div>
+        <div class="ps-date-sub" id="ps-date-sub">—</div>
+      </div>
+    </div>
+
+    <!-- SECTION: Stats -->
+    <div class="ps-section-title">📊 الإحصائيات الشخصية</div>
+    <div class="ps-stat-grid" id="ps-stat-grid"><!-- filled by JS --></div>
+
+    <!-- SECTION: Life Progress -->
+    <div class="ps-section-title">📈 شريط الحياة</div>
+    <div class="ps-progress-wrap">
+      <div class="ps-prog-header">
+        <div class="ps-prog-title">نسبة العمر المُعاش</div>
+        <div class="ps-prog-pct" id="ps-prog-pct">—</div>
+      </div>
+      <div class="ps-prog-track">
+        <div class="ps-prog-fill" id="ps-prog-fill" style="width:0%"></div>
+      </div>
+      <div class="ps-phases-row" id="ps-phases-row"><!-- filled by JS --></div>
+    </div>
+
+    <!-- SECTION: Timeline image -->
+    <div class="ps-section-title">⏳ الخط الزمني</div>
+    <div class="ps-tl-wrap">
+      <div class="ps-tl-inner">
+        <div class="ps-tl-title-row">
+          <div class="ps-tl-en">Life is an Irreversible Process</div>
+          <div class="ps-tl-ar">الحياة عملية غير عكسية</div>
+        </div>
+        <img id="ps-tl-img" src="" alt="Timeline"/>
+        <img id="ps-age-img" src="" alt="Age Line" style="width:100%;display:block;margin-top:6px;"/>
+      </div>
+    </div>
+
+    <!-- SECTION: Phases Table -->
+    <div class="ps-section-title">🗂️ جدول المراحل</div>
+    <table class="ps-phases-table" id="ps-phases-table">
+      <thead>
+        <tr>
+          <th>المرحلة</th>
+          <th>من سنة</th>
+          <th>إلى سنة</th>
+          <th>إجمالي الأيام</th>
+          <th>أيام عشتها</th>
+          <th>متبقي</th>
+          <th>مكتمل</th>
+        </tr>
+      </thead>
+      <tbody id="ps-phases-tbody"><!-- filled by JS --></tbody>
+    </table>
+
+    <!-- SECTION: Year dots -->
+    <div class="ps-section-title">🟩 خريطة السنوات</div>
+    <div class="ps-dots-wrap">
+      <div class="ps-dots-legend">
+        <span><span class="ps-dl-dot" style="background:#6b9465"></span>سنوات عشتها</span>
+        <span><span class="ps-dl-dot" style="background:#b5541a"></span>أنت الآن</span>
+        <span><span class="ps-dl-dot" style="background:#e8dfc8;border:1px solid #ccc"></span>سنوات أمامك</span>
+      </div>
+      <div class="ps-dots-grid" id="ps-dots-grid"><!-- filled by JS --></div>
+    </div>
+
+    <!-- SECTION: Extra stats -->
+    <div class="ps-section-title">💡 حسابات الحياة</div>
+    <div class="ps-extra-grid" id="ps-extra-grid"><!-- filled by JS --></div>
+
+    <!-- Quote -->
+    <div class="ps-quote">
+      <div class="ps-quote-text">"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ"</div>
+      <div class="ps-quote-src">— رواه البخاري، عن ابن عمر رضي الله عنه</div>
+    </div>
+
+    <!-- PAGE FOOTER -->
+    <div class="ps-page-footer">
+      <div class="ps-footer-logo">الأيام المعدودة</div>
+      <div id="ps-footer-center" style="font-size:7.5pt;color:#8c7a5e;"></div>
+      <div class="ps-footer-url">ahmdmusa.github.io/ayyam-maadouda</div>
+    </div>
   </div>
 
   <footer>كل يوم هو فرصة لا تعوض · <span id="footerDate" dir="ltr"></span></footer>
@@ -1339,9 +1763,47 @@ function setupCanvasInteraction(){
     const phases = getPhases(totalDays);
     const hoverDay = (mx-PAD_L)/TW * totalDays;
     if(hoverDay<0||hoverDay>totalDays) return;
-
     const ph = phases.find(p=>hoverDay>=p.s && hoverDay<p.e) || phases[phases.length-1];
     showPhaseDetail(ph, totalDays);
+  });
+
+  /* ── Touch support for mobile ── */
+  c.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect  = c.getBoundingClientRect();
+    const mx    = touch.clientX - rect.left;
+    const PAD_L=14, PAD_R=28, ARROW=18;
+    const TW = c.offsetWidth - PAD_L - PAD_R - ARROW;
+    const totalDays = TL_DAYS(LIFESPAN);
+    const phases = getPhases(totalDays);
+    const hoverDay = (mx-PAD_L)/TW * totalDays;
+    if(hoverDay<0||hoverDay>totalDays){ tt.classList.remove('show'); return; }
+    const hoverAge = hoverDay/365.25;
+    const ph = phases.find(p=>hoverDay>=p.s && hoverDay<p.e) || phases[phases.length-1];
+    // show tooltip at bottom on mobile
+    const curDays = DOB ? Math.floor((new Date()-DOB)/86400000) : null;
+    const phaseDone = curDays!=null ? Math.max(0,Math.min(curDays-ph.s, ph.e-ph.s)) : 0;
+    const phasePct  = curDays!=null ? (phaseDone/(ph.e-ph.s)*100).toFixed(0) : '—';
+    document.getElementById('ttTitle').textContent = ph.icon+' '+ph.nameAr;
+    document.getElementById('ttBody').innerHTML =
+      `<div class="tt-row"><span>اليوم:</span><span class="tt-val">${fmt(Math.round(hoverDay))}</span></div>
+       <div class="tt-row"><span>العمر:</span><span class="tt-val">${hoverAge.toFixed(1)} سنة</span></div>
+       <div class="tt-row"><span>المرحلة:</span><span class="tt-val">${ph.nameEn}</span></div>
+       <div class="tt-row"><span>أيام المرحلة:</span><span class="tt-val">${fmt(ph.e-ph.s)}</span></div>
+       ${curDays?`<div class="tt-row"><span>أنجزت:</span><span class="tt-val">${phasePct}%</span></div>`:''}`;
+    tt.style.left=''; tt.style.top='';
+    tt.classList.add('show');
+    // auto-hide after 3s on touch
+    clearTimeout(tt._hideTimer);
+    tt._hideTimer = setTimeout(()=>tt.classList.remove('show'), 3000);
+    // also open phase detail on tap
+    showPhaseDetail(ph, totalDays);
+  },{passive:false});
+
+  c.addEventListener('touchend', ()=>{
+    clearTimeout(tt._hideTimer);
+    tt._hideTimer = setTimeout(()=>tt.classList.remove('show'), 2000);
   });
 }
 
@@ -1398,6 +1860,129 @@ if(storedDOB){
   renderTL();
 }
 setupCanvasInteraction();
+
+/* ══════════════════════════════════════════
+   BUILD PRINT SHEET & PRINT
+══════════════════════════════════════════ */
+function doPrint(){
+  if(!DOB){ alert('أدخل تاريخ ميلادك أولاً'); return; }
+
+  const now      = new Date();
+  const dl       = Math.floor((now - DOB) / 86400000);
+  const ay       = dl / 365.25;
+  const ageY     = Math.floor(ay);
+  const total    = TL_DAYS(LIFESPAN);
+  const remain   = Math.max(0, total - dl);
+  const pct      = Math.min(1, dl / total);
+  const phases   = getPhases(total);
+
+  /* ── Page header ── */
+  document.getElementById('ps-date-main').textContent =
+    now.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('ps-date-sub').textContent =
+    'العمر: ' + ageY + ' سنة · اليوم رقم: ' + fmt(dl);
+  document.getElementById('ps-footer-center').textContent =
+    'تاريخ الميلاد: ' + DOB.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+
+  /* ── Stats grid ── */
+  const nextBD = new Date(now.getFullYear(), DOB.getMonth(), DOB.getDate());
+  if(nextBD <= now) nextBD.setFullYear(now.getFullYear()+1);
+  const daysToNext = Math.ceil((nextBD - now)/86400000);
+
+  const stats = [
+    {num: ageY+' سنة',        lbl:'العمر الحالي',      color:'#2980b9'},
+    {num: fmt(dl),             lbl:'أنت في اليوم رقم',  color:'#c9a96e'},
+    {num: fmt(dl),             lbl:'يوم عشته',          color:'#4a6741'},
+    {num: fmt(remain),         lbl:'يوم متبقٍ',         color:'#b5541a'},
+    {num: fmt(Math.floor(dl/7)),  lbl:'أسبوع عشته',     color:'#d4ac0d'},
+    {num: fmt(Math.floor(dl/30.44)), lbl:'شهر عشته',    color:'#9b59b6'},
+    {num: (pct*100).toFixed(1)+'%', lbl:'من العمر مضى', color:'#1abc9c'},
+    {num: fmt(daysToNext),     lbl:'يوم لعيد ميلادك',  color:'#e67e22'},
+  ];
+  document.getElementById('ps-stat-grid').innerHTML = stats.map(s=>
+    `<div class="ps-stat">
+       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.color}"></div>
+       <div class="ps-stat-num" style="color:${s.color}">${s.num}</div>
+       <div class="ps-stat-lbl">${s.lbl}</div>
+     </div>`
+  ).join('');
+
+  /* ── Progress bar ── */
+  document.getElementById('ps-prog-pct').textContent  = (pct*100).toFixed(1)+'%';
+  document.getElementById('ps-prog-fill').style.width = (pct*100)+'%';
+
+  const phaseColors = ['#5a9b6a','#2980b9','#d4803a','#8e44ad','#7f8c8d'];
+  document.getElementById('ps-phases-row').innerHTML = phases.map((ph,i)=>
+    `<div class="ps-phase-seg" style="background:${phaseColors[i]};flex:${ph.e-ph.s}" title="${ph.nameAr}"></div>`
+  ).join('');
+
+  /* ── Canvas → Image ── */
+  const c1 = document.getElementById('tlCanvas');
+  const c2 = document.getElementById('tlAge');
+  if(c1 && c1.width > 0){
+    document.getElementById('ps-tl-img').src  = c1.toDataURL('image/png');
+    document.getElementById('ps-age-img').src = c2 ? c2.toDataURL('image/png') : '';
+  }
+
+  /* ── Phases table ── */
+  const tbody = document.getElementById('ps-phases-tbody');
+  tbody.innerHTML = phases.map((ph,i)=>{
+    const pDays   = ph.e - ph.s;
+    const pDone   = Math.max(0, Math.min(dl - ph.s, pDays));
+    const pLeft   = Math.max(0, pDays - pDone);
+    const pPct    = (pDone/pDays*100).toFixed(0)+'%';
+    const isCur   = dl >= ph.s && dl < ph.e;
+    const startY  = (ph.s/365.25).toFixed(0);
+    const endY    = (ph.e/365.25).toFixed(0);
+    return `<tr class="${isCur?'ps-current-row':''}">
+      <td><span class="ps-phase-dot" style="background:${ph.color}"></span>${ph.icon} ${ph.nameAr}</td>
+      <td>${startY}</td>
+      <td>${endY}</td>
+      <td>${fmt(pDays)}</td>
+      <td>${fmt(pDone)}</td>
+      <td>${fmt(pLeft)}</td>
+      <td>${pPct}</td>
+    </tr>`;
+  }).join('');
+
+  /* ── Year dots ── */
+  let dotsHtml = '';
+  for(let y=1; y<=LIFESPAN; y++){
+    let cls = y < ageY ? 'ps-yd-l' : y === ageY ? 'ps-yd-c' : 'ps-yd-r';
+    dotsHtml += `<div class="ps-yd ${cls}" title="سنة ${y}"></div>`;
+  }
+  document.getElementById('ps-dots-grid').innerHTML = dotsHtml;
+
+  /* ── Extra stats ── */
+  const extras = [
+    {icon:'❤️', val:fmtB(dl*86400*1.1), lbl:'ضربة قلب تقريبي'},
+    {icon:'😴', val:fmt(Math.round(dl*0.33)), lbl:'يوم في النوم'},
+    {icon:'🍽️', val:fmt(dl*3), lbl:'وجبة أكلتها'},
+    {icon:'🌙', val:fmt(Math.floor(dl/7)), lbl:'جمعة مرّت'},
+    {icon:'📖', val:fmt(Math.max(0,ageY-7)), lbl:'رمضان صمته'},
+    {icon:'🌅', val:fmt(dl), lbl:'شروق شمس رأيته'},
+  ];
+  document.getElementById('ps-extra-grid').innerHTML = extras.map(e=>
+    `<div class="ps-extra-card">
+       <div class="ps-extra-icon">${e.icon}</div>
+       <div>
+         <div class="ps-extra-val">${e.val}</div>
+         <div class="ps-extra-lbl">${e.lbl}</div>
+       </div>
+     </div>`
+  ).join('');
+
+  /* ── Show sheet and print ── */
+  document.getElementById('printSheet').style.display = 'block';
+  setTimeout(()=>{
+    window.print();
+    // hide again after print dialog closes
+    setTimeout(()=>{
+      document.getElementById('printSheet').style.display = 'none';
+    }, 1000);
+  }, 300);
+}
+
 </script>
 </body>
 </html>
